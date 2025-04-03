@@ -1,0 +1,24 @@
+{
+  "name": "varsityspotlight-backend",
+  "type": "commonjs",
+  "version": "1.0.0",
+  "scripts": {
+    "watch": "tsc --watch",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "serve": "nodemon dist/index.js",
+    "dev": "concurrently \"npm:watch\" \"npm:serve\""
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.14.0",
+    "concurrently": "^8.0.0",
+    "nodemon": "^2.0.22",
+    "typescript": "^5.4.0"
+  }
+}
