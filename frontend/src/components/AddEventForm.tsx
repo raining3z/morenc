@@ -55,10 +55,10 @@ export default function AddEventForm({
         <FullWidth>
           <Select
             defaultOption="Select School"
-            field="schoolName"
+            field="schoolId"
             label="Select a School"
             options={schools}
-            value={formData.schoolName}
+            value={formData.schoolId}
             onChange={handleChange}
           />
         </FullWidth>

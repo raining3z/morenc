@@ -68,7 +68,6 @@ export default function Filters({
       <FilterTags>
         <FilterLabel>Filters</FilterLabel>
         {selectedFilters.map((filter) => {
-          console.log(selectedFilters);
           const schoolName = schools.find((school) => school.id === filter);
           return (
             <FilterTag key={filter} onClick={() => deleteFilter(filter)}>

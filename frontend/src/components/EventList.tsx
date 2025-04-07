@@ -13,7 +13,7 @@ interface EventListProps {
   events: EventProps[];
   eventAdded: boolean;
   hasError: boolean;
-  deleteEvent: (id: number) => void;
+  deleteEvent: (_id: string) => void;
   updateEvent: (event: EventProps) => void;
 }
 
@@ -38,7 +38,7 @@ export default function EventList({
       {events.map((event) => {
         return (
           <EventCard
-            key={event.id}
+            key={event._id}
             event={event}
             deleteEvent={deleteEvent}
             updateEvent={updateEvent}

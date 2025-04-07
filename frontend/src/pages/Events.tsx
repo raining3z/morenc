@@ -7,7 +7,7 @@ import config from '../config';
 import EventList from '../components/EventList';
 import AddEventForm from '../components/AddEventForm';
 
-import { Event, EventData } from '../types/events';
+import { EventData, Event } from '../types/events';
 import useEventsContext from '../hooks/useEventsContext';
 
 import { EventsContextProvider } from '../store/EventsProvider';
@@ -49,8 +49,7 @@ const defaultFormData: EventData = {
   date: '',
   startTime: '',
   endTime: '',
-  schoolName: '',
-  county: '',
+  schoolId: 0,
 };
 
 export default function Events() {
@@ -78,6 +77,7 @@ function EventsProvider() {
     const sportId = +value;
 
     setSelectedFilters((prev) => {
+      console.log(prev);
       if (checked) {
         return [...prev, sportId];
       } else {
@@ -137,9 +137,6 @@ function EventsProvider() {
   ) {
     const { name, value } = event.target;
 
-    console.log(name);
-    console.log(value);
-
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
@@ -147,7 +144,6 @@ function EventsProvider() {
   }
 
   function addEventHandler(event: FormEvent<HTMLFormElement>) {
-    console.log('hello');
     event.preventDefault();
 
     if (
@@ -166,7 +162,7 @@ function EventsProvider() {
       // Update existing event
       // setEvents((prevEvents) =>
       //   prevEvents.map((event) =>
-      //     event.id === updatingEvent.id
+      //     event._id === updatingevent._id
       //       ? {
       //           ...event,
       //
@@ -176,7 +172,7 @@ function EventsProvider() {
       // );
 
       updateEventSubmit({
-        // id: updatingEvent.id,
+        // id: updatingevent._id,
         // eventName: formData.eventName,
         // description: formData.description,
         // date: formData.date,
@@ -193,7 +189,7 @@ function EventsProvider() {
     } else {
       console.log('adding');
       // Add new event
-      const eventId = Math.random();
+      // const eventId = Math.random();
       // const newEvent: Event = {
       //   id: eventId,
       //   eventName: formData.eventName,
@@ -204,14 +200,13 @@ function EventsProvider() {
       // };
 
       addEvent({
-        id: eventId,
+        // id: eventId, // this should be set on backend.  watch for TS errors
         eventName: formData.eventName,
         description: formData.description,
         date: formData.date,
         startTime: formData.startTime,
         endTime: formData.endTime,
-        schoolName: formData.schoolName,
-        county: formData.county,
+        schoolId: +formData.schoolId,
       });
 
       //setEvents((prevEvents) => [...prevEvents, newEvent]);
@@ -225,10 +220,11 @@ function EventsProvider() {
   }
 
   // function deleteEvent(id: number) {
-  //   setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
+  //   setEvents((prevEvents) => prevEvents.filter((event) => event._id !== id));
   // }
 
   function updateEvent(eventObj: Event) {
+    // ** 'Event' because you need the _id from db/api
     setIsUpdating(true);
     setUpdatingEvent(eventObj);
 
@@ -238,8 +234,7 @@ function EventsProvider() {
       date: eventObj.date,
       startTime: eventObj.startTime,
       endTime: eventObj.endTime,
-      schoolName: eventObj.schoolName,
-      county: eventObj.schoolName,
+      schoolId: eventObj.schoolId,
     });
   }
 

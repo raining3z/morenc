@@ -31,7 +31,7 @@ export default function App() {
         <Body>
           <Routes>
             <Route path="/events" element={<Events />} />
-            <Route path="/events/:eventName" element={<EventDetails />} />
+            <Route path="/events/:_id" element={<EventDetails />} />
             <Route path="/completed" element={<CompletedProjects />} />
           </Routes>
         </Body>

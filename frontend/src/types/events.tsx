@@ -4,10 +4,9 @@ export interface EventData {
   date: string;
   startTime: string;
   endTime: string;
-  schoolName: string;
-  county: string;
+  schoolId: number;
 }
 
 export interface Event extends EventData {
-  id: number;
+  _id: string;
 }

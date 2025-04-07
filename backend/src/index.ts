@@ -1,161 +1,80 @@
 const express = require('express');
 
-const parser = require('body-parser');
+const parsed = require('body-parser');
 
-const cors = require('cors'); // localhost only: this is needed for React to hit backend port
+const Event = require('./models/Event');
 
 import type { Express, Request, Response, NextFunction } from 'express';
 
+const mongoose = require('mongoose');
+
 const app: Express = express();
 
-app.use(cors()); // localhost only: this is needed for React to hit backend port
+app.use(parsed.json());
 
-app.use(parser.json());
+app.get(
+  '/api/events/:_id',
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { _id } = req.params;
 
-const players = [
-  {
-    id: 1,
-    sportId: 1,
-    profile: {
-      firstName: 'Aubrey',
-      lastName: 'Chase',
-      gender: 'F',
-      position: 'PF',
-      weight: 0,
-    },
-  },
-  {
-    id: 2,
-    sportId: 2,
-    profile: {
-      firstName: 'Basia',
-      lastName: 'Walls',
-      gender: 'M',
-      position: 'OL',
-      weight: 230,
-    },
-  },
-  {
-    id: 3,
-    sportId: 3,
-    profile: {
-      firstName: 'Carter',
-      lastName: 'Brooks',
-      gender: 'M',
-      position: 'CF',
-      weight: 185,
-    },
-  },
-  {
-    id: 4,
-    sportId: 4,
-    profile: {
-      firstName: 'Delaney',
-      lastName: 'Rivera',
-      gender: 'F',
-      position: 'S',
-      weight: 145,
-    },
-  },
-  {
-    id: 5,
-    sportId: 1,
-    profile: {
-      firstName: 'Emerson',
-      lastName: 'Lee',
-      gender: 'F',
-      position: 'SG',
-      weight: 135,
-    },
-  },
-  {
-    id: 6,
-    sportId: 2,
-    profile: {
-      firstName: 'Finn',
-      lastName: 'Douglas',
-      gender: 'M',
-      position: 'QB',
-      weight: 210,
-    },
-  },
-  {
-    id: 7,
-    sportId: 3,
-    profile: {
-      firstName: 'Gia',
-      lastName: 'Anderson',
-      gender: 'F',
-      position: 'LW',
-      weight: 120,
-    },
-  },
-  {
-    id: 8,
-    sportId: 4,
-    profile: {
-      firstName: 'Hudson',
-      lastName: 'Blake',
-      gender: 'M',
-      position: 'MB',
-      weight: 200,
-    },
-  },
-  {
-    id: 9,
-    sportId: 1,
-    profile: {
-      firstName: 'Isla',
-      lastName: 'Nguyen',
-      gender: 'F',
-      position: 'PG',
-      weight: 125,
-    },
-  },
-  {
-    id: 10,
-    sportId: 2,
-    profile: {
-      firstName: 'Jaxon',
-      lastName: 'Taylor',
-      gender: 'M',
-      position: 'RB',
-      weight: 205,
-    },
-  },
-  {
-    id: 11,
-    sportId: 3,
-    profile: {
-      firstName: 'Kira',
-      lastName: 'Santos',
-      gender: 'F',
-      position: 'RW',
-      weight: 130,
-    },
-  },
-  {
-    id: 12,
-    sportId: 4,
-    profile: {
-      firstName: 'Luca',
-      lastName: 'Martinez',
-      gender: 'M',
-      position: 'OH',
-      weight: 190,
-    },
-  },
-];
-app.get('/api/players', (req: Request, res: Response, next: NextFunction) => {
-  console.log('✅ Backend hit: /api/players');
+    try {
+      const event = await Event.findById(_id);
+      res.status(200).json(event);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: `Failed to fetch event ${_id}` });
+    }
+  }
+);
 
-  res.status(200).json(players);
-});
+app.get(
+  '/api/events',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const events = await Event.find();
+      res.status(200).json(events);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to fetch events' });
+    }
+  }
+);
 
-app.post('/api/players', (req: Request, res: Response, next: NextFunction) => {
-  players.push(req.body);
+app.post(
+  '/api/events',
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { eventName, description, date, startTime, endTime, schoolId } =
+      req.body;
 
-  res.status(201).json({ message: 'New player added' });
-});
+    try {
+      const newEvent = new Event({
+        eventName,
+        description,
+        date,
+        startTime,
+        endTime,
+        schoolId,
+      });
 
-app.listen(3000);
+      const savedEvent = await newEvent.save();
+
+      res.status(201).json(savedEvent);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to create event' });
+    }
+  }
+);
+
+(async () => {
+  try {
+    await mongoose.connect(
+      'mongodb+srv://raining3z:AkuWc53mlcXXNf8d@cluster0.ye36n.mongodb.net/more?retryWrites=true&w=majority&appName=Cluster'
+    );
+    console.log('connected');
+    app.listen(3000);
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    process.exit(1); // Optional: exit process on failure
+  }
+})();
