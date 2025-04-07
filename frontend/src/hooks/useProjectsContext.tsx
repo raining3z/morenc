@@ -1,4 +1,4 @@
-import { ProjectsContext } from '../store/ProjectsContext';
+import { ProjectsContext } from '../store/Projects/ProjectsContext';
 import { useContext } from 'react';
 
 export default function useProjectsContext() {

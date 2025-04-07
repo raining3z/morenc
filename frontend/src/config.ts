@@ -32,7 +32,6 @@ const config: Config = {
       id: 4,
       name: 'Northern Guilford High School',
       county: 'Guilford',
-      active: true,
     },
     { id: 5, name: 'Southeast Guilford High School', county: 'Guilford' },
     { id: 6, name: 'Southern Guilford High School', county: 'Guilford' },
@@ -43,6 +42,12 @@ const config: Config = {
     {
       id: 11,
       name: 'Summerfield Elementary School',
+      county: 'Guilford',
+      active: true,
+    },
+    {
+      id: 12,
+      name: 'Northern Guilford Middle School',
       county: 'Guilford',
       active: true,
     },

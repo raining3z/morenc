@@ -1,4 +1,4 @@
-import { Project } from '../pages/CompletedProjects';
+import { Project } from '../pages/completed-projects';
 
 export interface ProjectProps {
   project: Project;

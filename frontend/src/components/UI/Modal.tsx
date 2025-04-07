@@ -22,7 +22,8 @@ const ModalWrapper = styled.div`
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  min-width: 300px;
+  min-width: 600px;
+  max-width: 800px;
 `;
 
 const CloseButton = styled(FaTimes)`
@@ -42,14 +43,20 @@ const CloseButton = styled(FaTimes)`
 
 interface ModalProps {
   children: ReactNode;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
-export default function Modal({ children }: ModalProps) {
+export default function Modal({ children, isOpen, setIsOpen }: ModalProps) {
+  if (!isOpen) {
+    return null;
+  }
+
   return (
     <>
       <Backdrop />
       <ModalWrapper>
-        <CloseButton />
+        <CloseButton onClick={() => setIsOpen(false)} />
         {children}
       </ModalWrapper>
     </>

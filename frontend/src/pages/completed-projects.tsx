@@ -35,7 +35,7 @@ const completedProjects: Project[] = [
 
 import CompletedProjectsList from '../components/CompletedProjectsList';
 
-export default function CompletedProjects() {
+export default function CompletedProjectsPage() {
   return (
     <>
       <h1>These are your completed projects</h1>

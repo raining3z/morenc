@@ -1,9 +1,9 @@
-import { type ReactNode } from 'react';
+import { ComponentPropsWithRef, type ReactNode } from 'react';
 
-interface ButtonProps {
+type ButtonProps = {
   children: ReactNode;
-}
+} & ComponentPropsWithRef<'button'>;
 
-export default function Button({ children }: ButtonProps) {
-  return <button>{children}</button>;
+export default function Button({ children, ...props }: ButtonProps) {
+  return <button {...props}>{children}</button>;
 }

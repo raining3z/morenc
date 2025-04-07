@@ -1,5 +1,5 @@
 import CompletedProject from './CompletedProject';
-import { Project } from '../pages/CompletedProjects';
+import { Project } from '../pages/completed-projects';
 
 type CompletedProjectsProps = {
   projects: Project[];

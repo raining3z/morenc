@@ -58,42 +58,13 @@ const TimeRange = styled.span`
   color: #555;
 `;
 
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-
-  button {
-    flex: 1;
-    padding: 0.5rem;
-    border: none;
-    border-radius: 6px;
-    background-color: #f2f2f2;
-    color: #333;
-    cursor: pointer;
-    font-weight: 500;
-
-    &:hover {
-      background-color: #e0e0e0;
-    }
-  }
-`;
-
 interface ProjectProps {
   project: Project;
-  deleteProject: (_id: string) => void;
-  updateProject: (project: Project) => void;
 }
 
 const { schools } = config;
 
-const isLoggedin: boolean = true;
-
-export default function ProjectCard({
-  project,
-  deleteProject,
-  updateProject,
-}: ProjectProps) {
+export default function ProjectCard({ project }: ProjectProps) {
   const school = schools.find((school) => school.id === project.schoolId);
   const schoolName = school?.name;
 
@@ -101,14 +72,12 @@ export default function ProjectCard({
     <ProductItem>
       <img
         src="https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3917376.png&w=350&h=254"
-        alt={project.projectName}
+        alt={project.name}
       />
 
       <SchoolName>{schoolName}</SchoolName>
 
-      <ProjectLink to={`/projects/${project._id}`}>
-        {project.projectName}
-      </ProjectLink>
+      <ProjectLink to={`/projects/${project._id}`}>{project.name}</ProjectLink>
 
       <Description>{project.description}</Description>
 
@@ -116,13 +85,6 @@ export default function ProjectCard({
       <TimeRange>
         {project.startTime} - {project.endTime}
       </TimeRange>
-
-      {isLoggedin && (
-        <ButtonGroup>
-          <button onClick={() => updateProject(project)}>Update</button>
-          <button onClick={() => deleteProject(project._id)}>Delete</button>
-        </ButtonGroup>
-      )}
     </ProductItem>
   );
 }

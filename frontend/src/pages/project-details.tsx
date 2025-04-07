@@ -51,7 +51,7 @@ const TimeRange = styled.span`
   color: #555;
 `;
 
-export default function ProjectDetails() {
+export default function ProjectDetailsPage() {
   const [project, setProject] = useState<Project>();
   const { _id: projectId } = useParams();
 
@@ -82,12 +82,12 @@ export default function ProjectDetails() {
     <ProductItem>
       <img
         src="https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3917376.png&w=350&h=254"
-        alt={project.projectName}
+        alt={project.name}
       />
 
       <SchoolName>{schoolName}</SchoolName>
 
-      <ProjectName>{project.projectName}</ProjectName>
+      <ProjectName>{project.name}</ProjectName>
 
       <Description>{project.description}</Description>
 

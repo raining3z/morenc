@@ -1,5 +1,5 @@
 export interface ProjectData {
-  projectName: string;
+  name: string;
   description: string;
   date: string;
   startTime: string;

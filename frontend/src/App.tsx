@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Projects from './pages/Projects';
-import ProjectDetails from './pages/ProjectDetails';
-import CompletedProjects from './pages/CompletedProjects';
+import Projects from './pages/projects';
+import ProjectDetails from './pages/project-details';
+import CompletedProjects from './pages/completed-projects';
 import Header from './components/Header';
+import AdminProjects from './pages/admin/projects';
+import AdminSchools from './pages/admin/schools';
 
 import styled from 'styled-components';
 
@@ -33,6 +35,8 @@ export default function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:_id" element={<ProjectDetails />} />
             <Route path="/completed" element={<CompletedProjects />} />
+            <Route path="/admin/projects" element={<AdminProjects />} />
+            <Route path="/admin/schools" element={<AdminSchools />} />
           </Routes>
         </Body>
       </MainContainer>

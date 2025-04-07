@@ -11,17 +11,17 @@
 import { ReactNode, useEffect, useReducer } from 'react';
 import { ProjectsContext, ProjectsContextValue } from './ProjectsContext';
 
-import { Project, ProjectData } from '../types/projects';
+import { Project, ProjectData } from '../../types/projects';
 
 export type ProjectsState = {
   projects: Project[];
-  isUpdatingProject: boolean;
+  isUpdating: boolean;
   updatingProject: Project | null;
 };
 
 const initialState: ProjectsState = {
   projects: [],
-  isUpdatingProject: false,
+  isUpdating: false,
   updatingProject: null,
 };
 
@@ -108,7 +108,7 @@ function projectsReducer(state: ProjectsState, action: Action): ProjectsState {
     case 'SET_UPDATING_PROJECT':
       return { ...state, updatingProject: action.payload };
     case 'SET_IS_UPDATING':
-      return { ...state, isUpdatingProject: action.payload };
+      return { ...state, isUpdating: action.payload };
 
     default:
       return state;
@@ -137,7 +137,7 @@ export function ProjectsContextProvider({
 
   const ctx: ProjectsContextValue = {
     projects: projectsState.projects,
-    isUpdatingProject: projectsState.isUpdatingProject,
+    isUpdating: projectsState.isUpdating,
     updatingProject: projectsState.updatingProject,
 
     addProject: async (project: ProjectData) => {
