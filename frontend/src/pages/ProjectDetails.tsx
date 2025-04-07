@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import config from '../config';
 import styled from 'styled-components';
 
-import { Event } from '../types/events';
+import { Project } from '../types/projects';
 
 const { schools } = config;
 
@@ -31,7 +31,7 @@ const SchoolName = styled.h3`
   color: #333;
 `;
 
-const EventName = styled.div`
+const ProjectName = styled.div`
   font-weight: 600;
 `;
 
@@ -51,49 +51,49 @@ const TimeRange = styled.span`
   color: #555;
 `;
 
-export default function EventDetails() {
-  const [event, setEvent] = useState<Event>();
-  const { _id: eventId } = useParams();
+export default function ProjectDetails() {
+  const [project, setProject] = useState<Project>();
+  const { _id: projectId } = useParams();
 
   useEffect(() => {
-    if (!eventId) return;
+    if (!projectId) return;
 
     async function fetchProduct() {
       try {
-        const response = await fetch(`/api/events/${eventId}`);
+        const response = await fetch(`/api/projects/${projectId}`);
         const data = await response.json();
-        setEvent(data);
+        setProject(data);
       } catch (error) {
         console.error(error);
       }
     }
 
     fetchProduct();
-  }, [eventId]);
+  }, [projectId]);
 
-  if (!event) {
-    return <p>Loading event...</p>;
+  if (!project) {
+    return <p>Loading project...</p>;
   }
 
-  const school = schools.find((school) => school.id === event.schoolId);
+  const school = schools.find((school) => school.id === project.schoolId);
   const schoolName = school?.name;
 
   return (
     <ProductItem>
       <img
         src="https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3917376.png&w=350&h=254"
-        alt={event.eventName}
+        alt={project.projectName}
       />
 
       <SchoolName>{schoolName}</SchoolName>
 
-      <EventName>{event.eventName}</EventName>
+      <ProjectName>{project.projectName}</ProjectName>
 
-      <Description>{event.description}</Description>
+      <Description>{project.description}</Description>
 
-      <Date>{event.date}</Date>
+      <Date>{project.date}</Date>
       <TimeRange>
-        {event.startTime} - {event.endTime}
+        {project.startTime} - {project.endTime}
       </TimeRange>
     </ProductItem>
   );

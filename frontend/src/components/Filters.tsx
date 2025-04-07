@@ -9,7 +9,7 @@ import { FaTimes } from 'react-icons/fa';
 interface FilterProps {
   schools: School[];
   selectedFilters: number[];
-  filterChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  filterChange: (project: ChangeEvent<HTMLInputElement>) => void;
   deleteFilter: (id: number) => void;
   inputRefs: RefObject<HTMLInputElement[]>;
 }

@@ -4,13 +4,13 @@ import styled from 'styled-components';
 
 import config from '../config';
 
-import EventList from '../components/EventList';
-import AddEventForm from '../components/AddEventForm';
+import ProjectList from '../components/ProjectList';
+import AddProjectForm from '../components/AddProjectForm';
 
-import { EventData, Event } from '../types/events';
-import useEventsContext from '../hooks/useEventsContext';
+import { ProjectData, Project } from '../types/projects';
+import useProjectsContext from '../hooks/useProjectsContext';
 
-import { EventsContextProvider } from '../store/EventsProvider';
+import { ProjectsContextProvider } from '../store/ProjectsProvider';
 import Filters from '../components/Filters';
 import Modal from '../components/UI/Modal';
 import SearchField from '../components/Search';
@@ -43,8 +43,8 @@ const LeftNav = styled.div`
   }
 `;
 
-const defaultFormData: EventData = {
-  eventName: '',
+const defaultFormData: ProjectData = {
+  projectName: '',
   description: '',
   date: '',
   startTime: '',
@@ -52,19 +52,19 @@ const defaultFormData: EventData = {
   schoolId: 0,
 };
 
-export default function Events() {
+export default function Projects() {
   return (
-    <EventsContextProvider>
-      <EventsProvider />
-    </EventsContextProvider>
+    <ProjectsContextProvider>
+      <ProjectsProvider />
+    </ProjectsContextProvider>
   );
 }
 
-function EventsProvider() {
-  // const [events, setEvents] = useState<Event[]>([]);
-  const [eventAdded, setEventAdded] = useState<boolean>(false);
+function ProjectsProvider() {
+  // const [projects, setProjects] = useState<Project[]>([]);
+  const [projectAdded, setProjectAdded] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
-  const [formData, setFormData] = useState<EventData>(defaultFormData);
+  const [formData, setFormData] = useState<ProjectData>(defaultFormData);
   const [selectedFilters, setSelectedFilters] = useState<number[]>([]);
   const [searchInput, setSearchInput] = useState<string>('');
   // const [sortOption, setSortOption] = useState<string>('');
@@ -116,19 +116,19 @@ function EventsProvider() {
   // TODO: add try/catch to all awaits
   // TODO: console.error OR throw new Error??
 
-  // const [isUpdatingEvent, setIsUpdatingEvent] = useState<boolean>(false);
-  // const [updatingEvent, setUpdatingEvent] = useState<Event | null>(null);
+  // const [isUpdatingProject, setIsUpdatingProject] = useState<boolean>(false);
+  // const [updatingProject, setUpdatingProject] = useState<Project | null>(null);
 
   const {
-    events,
-    addEvent,
-    deleteEvent,
-    updateEventSubmit,
-    isUpdatingEvent,
-    updatingEvent,
-    setUpdatingEvent,
+    projects,
+    addProject,
+    deleteProject,
+    updateProjectSubmit,
+    isUpdatingProject,
+    updatingProject,
+    setUpdatingProject,
     setIsUpdating,
-  } = useEventsContext();
+  } = useProjectsContext();
 
   function handleChange(
     event: ChangeEvent<
@@ -143,11 +143,11 @@ function EventsProvider() {
     }));
   }
 
-  function addEventHandler(event: FormEvent<HTMLFormElement>) {
+  function addProjectHandler(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (
-      formData.eventName === '' ||
+      formData.projectName === '' ||
       formData.description === '' ||
       formData.date === '' ||
       formData.startTime === '' ||
@@ -157,51 +157,51 @@ function EventsProvider() {
       return false;
     }
 
-    if (isUpdatingEvent && updatingEvent) {
+    if (isUpdatingProject && updatingProject) {
       console.log('updating');
-      // Update existing event
-      // setEvents((prevEvents) =>
-      //   prevEvents.map((event) =>
-      //     event._id === updatingevent._id
+      // Update existing project
+      // setProjects((prevProjects) =>
+      //   prevProjects.map((project) =>
+      //     project._id === updatingproject._id
       //       ? {
-      //           ...event,
+      //           ...project,
       //
       //         }
-      //       : event
+      //       : project
       //   )
       // );
 
-      updateEventSubmit({
-        // id: updatingevent._id,
-        // eventName: formData.eventName,
+      updateProjectSubmit({
+        // id: updatingproject._id,
+        // projectName: formData.projectName,
         // description: formData.description,
         // date: formData.date,
         // startTime: formData.startTime,
         // endTime: formData.endTime,
         // Do the below instead of above...when you can
-        ...updatingEvent, // Keeps the existing ID and any other properties
+        ...updatingProject, // Keeps the existing ID and any other properties
         ...formData, // Overwrites only the updated fields
       });
 
       // Reset update mode
       setIsUpdating(false);
-      setUpdatingEvent(null);
+      setUpdatingProject(null);
     } else {
       console.log('adding');
-      // Add new event
-      // const eventId = Math.random();
-      // const newEvent: Event = {
-      //   id: eventId,
-      //   eventName: formData.eventName,
+      // Add new project
+      // const projectId = Math.random();
+      // const newProject: Project = {
+      //   id: projectId,
+      //   projectName: formData.projectName,
       //   description: formData.description,
       //   date: formData.date,
       //   startTime: formData.startTime,
       //   endTime: formData.endTime,
       // };
 
-      addEvent({
-        // id: eventId, // this should be set on backend.  watch for TS errors
-        eventName: formData.eventName,
+      addProject({
+        // id: projectId, // this should be set on backend.  watch for TS errors
+        projectName: formData.projectName,
         description: formData.description,
         date: formData.date,
         startTime: formData.startTime,
@@ -209,32 +209,32 @@ function EventsProvider() {
         schoolId: +formData.schoolId,
       });
 
-      //setEvents((prevEvents) => [...prevEvents, newEvent]);
+      //setProjects((prevProjects) => [...prevProjects, newProject]);
     }
 
     // Reset form after adding/updating
     setFormData(defaultFormData);
 
-    setEventAdded(true);
+    setProjectAdded(true);
     setHasError(false);
   }
 
-  // function deleteEvent(id: number) {
-  //   setEvents((prevEvents) => prevEvents.filter((event) => event._id !== id));
+  // function deleteProject(id: number) {
+  //   setProjects((prevProjects) => prevProjects.filter((project) => project._id !== id));
   // }
 
-  function updateEvent(eventObj: Event) {
-    // ** 'Event' because you need the _id from db/api
+  function updateProject(projectObj: Project) {
+    // ** 'Project' because you need the _id from db/api
     setIsUpdating(true);
-    setUpdatingEvent(eventObj);
+    setUpdatingProject(projectObj);
 
     setFormData({
-      eventName: eventObj.eventName,
-      description: eventObj.description,
-      date: eventObj.date,
-      startTime: eventObj.startTime,
-      endTime: eventObj.endTime,
-      schoolId: eventObj.schoolId,
+      projectName: projectObj.projectName,
+      description: projectObj.description,
+      date: projectObj.date,
+      startTime: projectObj.startTime,
+      endTime: projectObj.endTime,
+      schoolId: projectObj.schoolId,
     });
   }
 
@@ -260,18 +260,20 @@ function EventsProvider() {
           sort by field
         </SortByField>
 
-        <AddEventForm
-          addEventHandler={addEventHandler}
-          formData={formData}
-          handleChange={handleChange}
-          isUpdatingEvent={isUpdatingEvent}
-        />
+        <Modal>
+          <AddProjectForm
+            addProjectHandler={addProjectHandler}
+            formData={formData}
+            handleChange={handleChange}
+            isUpdatingProject={isUpdatingProject}
+          />
+        </Modal>
 
-        <EventList
-          events={events}
-          deleteEvent={deleteEvent}
-          updateEvent={updateEvent}
-          eventAdded={eventAdded}
+        <ProjectList
+          projects={projects}
+          deleteProject={deleteProject}
+          updateProject={updateProject}
+          projectAdded={projectAdded}
           hasError={hasError}
         />
       </Grid>

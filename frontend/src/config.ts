@@ -56,8 +56,8 @@ const config: Config = {
     },
     {
       id: 2,
-      label: 'Events',
-      link: '/events',
+      label: 'Projects',
+      link: '/projects',
       subNav: [
         {
           id: 1,
@@ -83,7 +83,7 @@ const config: Config = {
     },
     {
       id: 3,
-      label: 'Completed Events',
+      label: 'Completed Projects',
       link: '/completed',
     },
   ],

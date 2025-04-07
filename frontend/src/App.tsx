@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Events from './pages/Events';
-import EventDetails from './pages/EventDetails';
+import Projects from './pages/Projects';
+import ProjectDetails from './pages/ProjectDetails';
 import CompletedProjects from './pages/CompletedProjects';
 import Header from './components/Header';
 
@@ -30,8 +30,8 @@ export default function App() {
         <Header />
         <Body>
           <Routes>
-            <Route path="/events" element={<Events />} />
-            <Route path="/events/:_id" element={<EventDetails />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:_id" element={<ProjectDetails />} />
             <Route path="/completed" element={<CompletedProjects />} />
           </Routes>
         </Body>

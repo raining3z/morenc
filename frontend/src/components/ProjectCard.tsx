@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { type Event } from '../types/events';
+import { type Project } from '../types/projects';
 import config from '../config';
 
 import styled from 'styled-components';
@@ -32,7 +32,7 @@ const SchoolName = styled.h3`
   color: #333;
 `;
 
-const EventLink = styled(Link)`
+const ProjectLink = styled(Link)`
   font-weight: 600;
   color: #0077cc;
   text-decoration: none;
@@ -79,46 +79,48 @@ const ButtonGroup = styled.div`
   }
 `;
 
-interface EventProps {
-  event: Event;
-  deleteEvent: (_id: string) => void;
-  updateEvent: (event: Event) => void;
+interface ProjectProps {
+  project: Project;
+  deleteProject: (_id: string) => void;
+  updateProject: (project: Project) => void;
 }
 
 const { schools } = config;
 
 const isLoggedin: boolean = true;
 
-export default function EventCard({
-  event,
-  deleteEvent,
-  updateEvent,
-}: EventProps) {
-  const school = schools.find((school) => school.id === event.schoolId);
+export default function ProjectCard({
+  project,
+  deleteProject,
+  updateProject,
+}: ProjectProps) {
+  const school = schools.find((school) => school.id === project.schoolId);
   const schoolName = school?.name;
 
   return (
     <ProductItem>
       <img
         src="https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3917376.png&w=350&h=254"
-        alt={event.eventName}
+        alt={project.projectName}
       />
 
       <SchoolName>{schoolName}</SchoolName>
 
-      <EventLink to={`/events/${event._id}`}>{event.eventName}</EventLink>
+      <ProjectLink to={`/projects/${project._id}`}>
+        {project.projectName}
+      </ProjectLink>
 
-      <Description>{event.description}</Description>
+      <Description>{project.description}</Description>
 
-      <Date>{event.date}</Date>
+      <Date>{project.date}</Date>
       <TimeRange>
-        {event.startTime} - {event.endTime}
+        {project.startTime} - {project.endTime}
       </TimeRange>
 
       {isLoggedin && (
         <ButtonGroup>
-          <button onClick={() => updateEvent(event)}>Update</button>
-          <button onClick={() => deleteEvent(event._id)}>Delete</button>
+          <button onClick={() => updateProject(project)}>Update</button>
+          <button onClick={() => deleteProject(project._id)}>Delete</button>
         </ButtonGroup>
       )}
     </ProductItem>

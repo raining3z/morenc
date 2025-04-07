@@ -1,5 +1,5 @@
-export interface EventData {
-  eventName: string;
+export interface ProjectData {
+  projectName: string;
   description: string;
   date: string;
   startTime: string;
@@ -7,6 +7,6 @@ export interface EventData {
   schoolId: number;
 }
 
-export interface Event extends EventData {
+export interface Project extends ProjectData {
   _id: string;
 }

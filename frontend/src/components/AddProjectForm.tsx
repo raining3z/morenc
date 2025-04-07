@@ -1,5 +1,5 @@
 import { Input, Textarea, Button, Select } from './FormElements';
-import { type EventData } from '../types/events';
+import { type ProjectData } from '../types/projects';
 import { type ChangeEvent, type FormEvent } from 'react';
 import config from '../config';
 
@@ -31,27 +31,27 @@ const SubmitButtonWrapper = styled.div`
 `;
 
 interface FormProps {
-  addEventHandler: (event: FormEvent<HTMLFormElement>) => void;
-  formData: EventData;
+  addProjectHandler: (event: FormEvent<HTMLFormElement>) => void;
+  formData: ProjectData;
   handleChange: (
     event: ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => void;
-  isUpdatingEvent: boolean;
+  isUpdatingProject: boolean;
 }
 
 const { schools } = config;
 
-export default function AddEventForm({
-  addEventHandler,
+export default function AddProjectForm({
+  addProjectHandler,
   formData,
   handleChange,
-  isUpdatingEvent,
+  isUpdatingProject,
 }: FormProps) {
   return (
     <FormWrapper>
-      <StyledForm onSubmit={addEventHandler}>
+      <StyledForm onSubmit={addProjectHandler}>
         <FullWidth>
           <Select
             defaultOption="Select School"
@@ -64,10 +64,10 @@ export default function AddEventForm({
         </FullWidth>
         <FullWidth>
           <Input
-            field="eventName"
+            field="projectName"
             label="Name"
             type="text"
-            value={formData.eventName}
+            value={formData.projectName}
             onChange={handleChange}
           />
         </FullWidth>
@@ -110,10 +110,10 @@ export default function AddEventForm({
         </FullWidth>
 
         <SubmitButtonWrapper>
-          {isUpdatingEvent ? (
-            <Button>Update Event</Button>
+          {isUpdatingProject ? (
+            <Button>Update Project</Button>
           ) : (
-            <Button>Add Event</Button>
+            <Button>Add Project</Button>
           )}
         </SubmitButtonWrapper>
       </StyledForm>
