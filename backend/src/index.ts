@@ -13,16 +13,53 @@ const app: Express = express();
 app.use(parsed.json());
 
 app.get(
-  '/api/events/:_id',
+  '/api/events/:eventId',
   async (req: Request, res: Response, next: NextFunction) => {
-    const { _id } = req.params;
+    const { eventId } = req.params;
 
     try {
-      const event = await Event.findById(_id);
+      const event = await Event.findById(eventId);
       res.status(200).json(event);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: `Failed to fetch event ${_id}` });
+      res.status(500).json({ error: `Failed to fetch event ${eventId}` });
+    }
+  }
+);
+
+app.patch(
+  '/api/events/:eventId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { eventId } = req.params;
+    const { ...updatedFields } = req.body;
+
+    try {
+      const event = await Event.findByIdAndUpdate(
+        eventId,
+        { $set: updatedFields },
+        { new: true }
+      );
+
+      res.status(200).json(event);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: `Failed to update event ${eventId}` });
+    }
+  }
+);
+
+app.delete(
+  '/api/events/:eventId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { eventId } = req.params;
+
+    try {
+      await Event.findByIdAndDelete(eventId);
+
+      res.status(200).json({ message: `${eventId} was deleted` });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: `Failed to delete event ${eventId}` });
     }
   }
 );

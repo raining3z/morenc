@@ -259,14 +259,13 @@ function EventsProvider() {
             </select> */}
           sort by field
         </SortByField>
-        <Modal>
-          <AddEventForm
-            addEventHandler={addEventHandler}
-            formData={formData}
-            handleChange={handleChange}
-            isUpdatingEvent={isUpdatingEvent}
-          />
-        </Modal>
+
+        <AddEventForm
+          addEventHandler={addEventHandler}
+          formData={formData}
+          handleChange={handleChange}
+          isUpdatingEvent={isUpdatingEvent}
+        />
 
         <EventList
           events={events}

@@ -118,25 +118,6 @@ export function EventsContextProvider({
 }: EventsContextProviderProps) {
   const [eventsState, dispatch] = useReducer(eventsReducer, initialState);
 
-  async function addEventHandler(event: EventData) {
-    try {
-      const response = await fetch('/api/events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(event),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to add event');
-      }
-
-      const addedEvent = await response.json();
-      dispatch({ type: 'ADD_EVENT', payload: addedEvent });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   useEffect(() => {
     async function fetchEvents() {
       try {
@@ -156,16 +137,66 @@ export function EventsContextProvider({
     events: eventsState.events,
     isUpdatingEvent: eventsState.isUpdatingEvent,
     updatingEvent: eventsState.updatingEvent,
-    addEvent: addEventHandler,
-    deleteEvent(_id) {
-      dispatch({ type: 'DELETE_EVENT', payload: _id });
+
+    addEvent: async (event: EventData) => {
+      try {
+        const response = await fetch('/api/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(event),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add event');
+        }
+
+        const addedEvent = await response.json();
+        dispatch({ type: 'ADD_EVENT', payload: addedEvent });
+      } catch (error) {
+        console.error(error);
+      }
     },
-    updateEventSubmit(event) {
-      dispatch({ type: 'UPDATE_EVENT', payload: event });
+
+    deleteEvent: async (eventId: string) => {
+      try {
+        const response = await fetch(`/api/events/${eventId}`, {
+          method: 'DELETE',
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to delete event ${eventId}`);
+        }
+
+        dispatch({ type: 'DELETE_EVENT', payload: eventId });
+      } catch (error) {
+        console.error(error);
+      }
     },
+
+    updateEventSubmit: async (event: Event) => {
+      const { _id: eventId } = event;
+      try {
+        const response = await fetch(`/api/events/${eventId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(event),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to update event ${eventId}`);
+        }
+
+        const updatedEvent = await response.json();
+        dispatch({ type: 'UPDATE_EVENT', payload: updatedEvent });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     setUpdatingEvent(event) {
       dispatch({ type: 'SET_UPDATING_EVENT', payload: event });
     },
+
     setIsUpdating(status) {
       dispatch({ type: 'SET_IS_UPDATING', payload: status });
     },

@@ -53,14 +53,14 @@ const TimeRange = styled.span`
 
 export default function EventDetails() {
   const [event, setEvent] = useState<Event>();
-  const { _id } = useParams();
+  const { _id: eventId } = useParams();
 
   useEffect(() => {
-    if (!_id) return;
+    if (!eventId) return;
 
     async function fetchProduct() {
       try {
-        const response = await fetch(`/api/events/${_id}`);
+        const response = await fetch(`/api/events/${eventId}`);
         const data = await response.json();
         setEvent(data);
       } catch (error) {
@@ -69,7 +69,7 @@ export default function EventDetails() {
     }
 
     fetchProduct();
-  }, [_id]);
+  }, [eventId]);
 
   if (!event) {
     return <p>Loading event...</p>;
