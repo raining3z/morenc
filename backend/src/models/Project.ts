@@ -28,7 +28,7 @@ const ProjectSchema = new Schema({
   //   required: true,
   // },
   schoolId: {
-    type: Number,
+    type: String,
     required: true,
   },
 });

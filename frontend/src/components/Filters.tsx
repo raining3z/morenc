@@ -8,10 +8,10 @@ import { FaTimes } from 'react-icons/fa';
 
 interface FilterProps {
   schools: School[];
-  selectedFilters: number[];
+  selectedFilters: string[];
   filterChange: (project: ChangeEvent<HTMLInputElement>) => void;
-  deleteFilter: (id: number) => void;
-  inputRefs: RefObject<HTMLInputElement[]>;
+  deleteFilter: (_id: string) => void;
+  inputRefs: RefObject<{ [key: string]: HTMLInputElement | null }>;
 }
 
 const FilterLabel = styled.h2`
@@ -68,7 +68,8 @@ export default function Filters({
       <FilterTags>
         <FilterLabel>Filters</FilterLabel>
         {selectedFilters.map((filter) => {
-          const schoolName = schools.find((school) => school.id === filter);
+          const schoolName = schools.find((school) => school._id === filter);
+
           return (
             <FilterTag key={filter} onClick={() => deleteFilter(filter)}>
               {schoolName?.name} <DeleteFilter />
@@ -78,18 +79,19 @@ export default function Filters({
       </FilterTags>
       <FilterOptions>
         {schools.map((school) => {
-          const schoolName = school.name.toLocaleLowerCase();
+          console.log(school._id);
+          const schoolName = school.name.replace(/\s+/g, '-');
 
           return (
-            <FilterOption key={school.id}>
+            <FilterOption key={school._id}>
               <FilterOptionLabel htmlFor={schoolName}>
                 <input
                   type="checkbox"
-                  value={school.id}
+                  value={school._id}
                   id={schoolName}
                   onChange={filterChange}
                   ref={(el) => {
-                    if (el) inputRefs.current[school.id] = el;
+                    if (el) inputRefs.current[school._id] = el;
                   }}
                 />{' '}
                 {school.name}

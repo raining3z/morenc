@@ -4,7 +4,7 @@ export interface ProjectData {
   date: string;
   startTime: string;
   endTime: string;
-  schoolId: number;
+  schoolId: string;
 }
 
 export interface Project extends ProjectData {

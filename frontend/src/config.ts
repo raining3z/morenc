@@ -1,7 +1,7 @@
 type Counties = string[];
 
 export interface School {
-  id: number;
+  _id: string;
   name: string;
   county: string;
   active?: boolean;
@@ -18,41 +18,11 @@ export interface Navigation extends NavigationLink {
 }
 
 interface Config {
-  schools: School[];
   navigation: Navigation[];
   countiesNC: Counties;
 }
 
 const config: Config = {
-  schools: [
-    { id: 1, name: 'Grimsley High School', county: 'Guilford' },
-    { id: 2, name: 'Page High School', county: 'Guilford' },
-    { id: 3, name: 'Northwest Guilford High School', county: 'Guilford' },
-    {
-      id: 4,
-      name: 'Northern Guilford High School',
-      county: 'Guilford',
-    },
-    { id: 5, name: 'Southeast Guilford High School', county: 'Guilford' },
-    { id: 6, name: 'Southern Guilford High School', county: 'Guilford' },
-    { id: 7, name: 'Western Guilford High School', county: 'Guilford' },
-    { id: 8, name: 'Eastern Guilford High School', county: 'Guilford' },
-    { id: 9, name: 'Ben L. Smith High School', county: 'Guilford' },
-    { id: 10, name: 'High Point Central High School', county: 'Guilford' },
-    {
-      id: 11,
-      name: 'Summerfield Elementary School',
-      county: 'Guilford',
-      active: true,
-    },
-    {
-      id: 12,
-      name: 'Northern Guilford Middle School',
-      county: 'Guilford',
-      active: true,
-    },
-  ],
-
   navigation: [
     {
       id: 1,

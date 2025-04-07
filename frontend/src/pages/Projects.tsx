@@ -1,18 +1,17 @@
-import { type ChangeEvent, useState, useRef } from 'react';
+import { type ChangeEvent, useState, useRef, useEffect } from 'react';
 
 import styled from 'styled-components';
-
-import config from '../config';
 
 import ProjectList from '../components/ProjectList';
 
 import useProjectsContext from '../hooks/useProjectsContext';
+import useSchoolsContext from '../hooks/useSchoolsContext';
 
 import Filters from '../components/Filters';
 import SearchField from '../components/Search';
 import { ProjectsContextProvider } from '../store/Projects/ProjectsProvider';
-
-const { schools } = config;
+import { SchoolsContextProvider } from '../store/Schools/SchoolsProvider';
+import { Project } from '../types/projects';
 
 const Grid = styled.div`
   padding: 2em;
@@ -43,14 +42,16 @@ const LeftNav = styled.div`
 export default function ProjectsPage() {
   return (
     <ProjectsContextProvider>
-      <Projects />
+      <SchoolsContextProvider>
+        <Projects />
+      </SchoolsContextProvider>
     </ProjectsContextProvider>
   );
 }
 
 function Projects() {
-  // const [projects, setProjects] = useState<Project[]>([]);
-  const [selectedFilters, setSelectedFilters] = useState<number[]>([]);
+  const [filteredProjects, setFilterProjects] = useState<Project[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [searchInput, setSearchInput] = useState<string>('');
   // const [sortOption, setSortOption] = useState<string>('');
 
@@ -80,6 +81,7 @@ function Projects() {
   // const [updatingProject, setUpdatingProject] = useState<Project | null>(null);
 
   const { projects } = useProjectsContext();
+  const { schools } = useSchoolsContext();
 
   // function deleteProject(id: number) {
   //   setProjects((prevProjects) => prevProjects.filter((project) => project._id !== id));
@@ -88,27 +90,42 @@ function Projects() {
   function filterChange(event: ChangeEvent<HTMLInputElement>) {
     const { checked, value } = event.target;
 
-    const sportId = +value;
+    const schoolId = value;
 
     setSelectedFilters((prev) => {
-      console.log(prev);
       if (checked) {
-        return [...prev, sportId];
+        return [...prev, schoolId];
       } else {
-        return prev.filter((sport) => sport !== sportId);
+        return prev.filter((school) => school !== schoolId);
       }
     });
   }
 
-  const inputRefs = useRef<HTMLInputElement[]>([]);
+  const inputRefs = useRef<{ [id: string]: HTMLInputElement | null }>({});
 
-  function deleteFilter(id: number) {
-    inputRefs.current[id].checked = false;
+  function deleteFilter(_id: string) {
+    //inputRefs.current[_id]?.checked = false;
+
+    const input = inputRefs.current[_id];
+    if (input) {
+      input.checked = false;
+    }
 
     setSelectedFilters((prev) => {
-      return prev.filter((filter) => filter !== id);
+      return prev.filter((filter) => filter !== _id);
     });
   }
+
+  useEffect(() => {
+    if (selectedFilters.length === 0) {
+      setFilterProjects(projects);
+    } else {
+      const filtered = projects.filter((project) =>
+        selectedFilters.includes(project.schoolId)
+      );
+      setFilterProjects(filtered);
+    }
+  }, [selectedFilters, projects]);
 
   return (
     <>
@@ -133,7 +150,7 @@ function Projects() {
         </SortByField>
 
         <ProjectList
-          projects={projects}
+          projects={filteredProjects}
           // deleteProject={deleteProject}
           // updateProject={updateProject}
           // projectAdded={projectAdded}

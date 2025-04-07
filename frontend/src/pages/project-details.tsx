@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import config from '../config';
 import styled from 'styled-components';
 
 import { Project } from '../types/projects';
-
-const { schools } = config;
+import useSchoolsContext from '../hooks/useSchoolsContext';
 
 const ProductItem = styled.div`
   background: #fff;
@@ -55,6 +53,8 @@ export default function ProjectDetailsPage() {
   const [project, setProject] = useState<Project>();
   const { _id: projectId } = useParams();
 
+  const { schools } = useSchoolsContext();
+
   useEffect(() => {
     if (!projectId) return;
 
@@ -75,7 +75,7 @@ export default function ProjectDetailsPage() {
     return <p>Loading project...</p>;
   }
 
-  const school = schools.find((school) => school.id === project.schoolId);
+  const school = schools.find((school) => school._id === project.schoolId);
   const schoolName = school?.name;
 
   return (

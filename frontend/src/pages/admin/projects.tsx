@@ -9,7 +9,8 @@ import { ProjectData, Project } from '../../types/projects';
 import { Link } from 'react-router-dom';
 
 import Message from '../../components/Message';
-import config from '../../config';
+import useSchoolsContext from '../../hooks/useSchoolsContext';
+import { SchoolsContextProvider } from '../../store/Schools/SchoolsProvider';
 
 const Container = styled.div`
   display: flex;
@@ -105,15 +106,15 @@ const defaultFormData: ProjectData = {
   date: '',
   startTime: '',
   endTime: '',
-  schoolId: 0,
+  schoolId: '',
 };
-
-const { schools } = config;
 
 export default function AdminProjectsPage() {
   return (
     <ProjectsContextProvider>
-      <Projects />
+      <SchoolsContextProvider>
+        <Projects />
+      </SchoolsContextProvider>
     </ProjectsContextProvider>
   );
 }
@@ -135,6 +136,8 @@ function Projects() {
     setUpdatingProject,
     setIsUpdating,
   } = useProjectsContext();
+
+  const { schools } = useSchoolsContext();
 
   function handleChange(
     event: ChangeEvent<
@@ -185,7 +188,7 @@ function Projects() {
         date: formData.date,
         startTime: formData.startTime,
         endTime: formData.endTime,
-        schoolId: +formData.schoolId,
+        schoolId: formData.schoolId,
       });
     }
 
@@ -196,17 +199,17 @@ function Projects() {
     setIsOpen(false);
   }
 
-  function updateProject(projectObj: Project) {
+  function updateProject(project: Project) {
     setIsUpdating(true);
-    setUpdatingProject(projectObj);
+    setUpdatingProject(project);
 
     setFormData({
-      name: projectObj.name,
-      description: projectObj.description,
-      date: projectObj.date,
-      startTime: projectObj.startTime,
-      endTime: projectObj.endTime,
-      schoolId: projectObj.schoolId,
+      name: project.name,
+      description: project.description,
+      date: project.date,
+      startTime: project.startTime,
+      endTime: project.endTime,
+      schoolId: project.schoolId,
     });
   }
 
@@ -231,7 +234,7 @@ function Projects() {
         <List>
           {projects.map((project, index) => {
             const school = schools.find(
-              (school) => school.id === project.schoolId
+              (school) => school._id === project.schoolId
             );
             const schoolName = school?.name;
 

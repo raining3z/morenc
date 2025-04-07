@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { type Project } from '../types/projects';
-import config from '../config';
 
 import styled from 'styled-components';
+import useSchoolsContext from '../hooks/useSchoolsContext';
 
 const ProductItem = styled.div`
   background: #fff;
@@ -62,10 +62,10 @@ interface ProjectProps {
   project: Project;
 }
 
-const { schools } = config;
-
 export default function ProjectCard({ project }: ProjectProps) {
-  const school = schools.find((school) => school.id === project.schoolId);
+  const { schools } = useSchoolsContext();
+
+  const school = schools.find((school) => school._id === project.schoolId);
   const schoolName = school?.name;
 
   return (

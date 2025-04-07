@@ -20,9 +20,10 @@ const SelectField = styled.select`
 `;
 
 type Options = {
-  id: number;
+  _id: string;
   name: string;
   county: string;
+  address: string;
   active?: boolean;
 };
 
@@ -46,13 +47,11 @@ export default function Input({
       <SelectField id={field} name={field} {...props}>
         <option value="">{defaultOption}</option>
         {options.map((option: Options) => {
-          if (option.active) {
-            return (
-              <option key={option.id} value={option.id}>
-                {option.name}
-              </option>
-            );
-          }
+          return (
+            <option key={option._id} value={option._id}>
+              {option.name}
+            </option>
+          );
         })}
       </SelectField>
     </FormGroup>

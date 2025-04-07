@@ -1,10 +1,10 @@
 import { Input, Textarea, Button, Select } from './FormElements';
 import { type ProjectData } from '../types/projects';
 import { type ChangeEvent, type FormEvent } from 'react';
-import config from '../config';
 
 import styled from 'styled-components';
 import { SchoolData } from '../types/schools';
+import useSchoolsContext from '../hooks/useSchoolsContext';
 
 const FormWrapper = styled.div`
   max-width: 800px;
@@ -44,7 +44,13 @@ interface FormProps {
   formOption: string;
 }
 
-const { schools } = config;
+// export default function AddFormContext() {
+//   return (
+//     <SchoolsContextProvider>
+//       <AddForm />
+//     </SchoolsContextProvider>
+//   );
+// }
 
 export default function AddForm({
   addHandler,
@@ -53,6 +59,8 @@ export default function AddForm({
   isUpdating,
   formOption,
 }: FormProps) {
+  const { schools } = useSchoolsContext();
+
   return (
     <FormWrapper>
       <StyledForm onSubmit={addHandler}>

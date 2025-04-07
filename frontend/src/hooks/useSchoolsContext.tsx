@@ -5,7 +5,7 @@ export default function useSchoolsContext() {
   const schoolsCtx = useContext(SchoolsContext);
 
   if (schoolsCtx === null) {
-    throw new Error('Projects context is null');
+    throw new Error('Schools context is null');
   }
 
   return schoolsCtx;
