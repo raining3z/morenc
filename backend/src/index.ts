@@ -2,7 +2,7 @@ const express = require('express');
 
 const parsed = require('body-parser');
 
-const Event = require('./models/Event');
+const Project = require('./models/Project');
 
 import type { Express, Request, Response, NextFunction } from 'express';
 
@@ -13,79 +13,79 @@ const app: Express = express();
 app.use(parsed.json());
 
 app.get(
-  '/api/events/:eventId',
+  '/api/projects/:projectId',
   async (req: Request, res: Response, next: NextFunction) => {
-    const { eventId } = req.params;
+    const { projectId } = req.params;
 
     try {
-      const event = await Event.findById(eventId);
-      res.status(200).json(event);
+      const project = await Project.findById(projectId);
+      res.status(200).json(project);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: `Failed to fetch event ${eventId}` });
+      res.status(500).json({ error: `Failed to fetch project ${projectId}` });
     }
   }
 );
 
 app.patch(
-  '/api/events/:eventId',
+  '/api/projects/:projectId',
   async (req: Request, res: Response, next: NextFunction) => {
-    const { eventId } = req.params;
+    const { projectId } = req.params;
     const { ...updatedFields } = req.body;
 
     try {
-      const event = await Event.findByIdAndUpdate(
-        eventId,
+      const project = await Project.findByIdAndUpdate(
+        projectId,
         { $set: updatedFields },
         { new: true }
       );
 
-      res.status(200).json(event);
+      res.status(200).json(project);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: `Failed to update event ${eventId}` });
+      res.status(500).json({ error: `Failed to update project ${projectId}` });
     }
   }
 );
 
 app.delete(
-  '/api/events/:eventId',
+  '/api/projects/:projectId',
   async (req: Request, res: Response, next: NextFunction) => {
-    const { eventId } = req.params;
+    const { projectId } = req.params;
 
     try {
-      await Event.findByIdAndDelete(eventId);
+      await Project.findByIdAndDelete(projectId);
 
-      res.status(200).json({ message: `${eventId} was deleted` });
+      res.status(200).json({ message: `${projectId} was deleted` });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: `Failed to delete event ${eventId}` });
+      res.status(500).json({ error: `Failed to delete project ${projectId}` });
     }
   }
 );
 
 app.get(
-  '/api/events',
+  '/api/projects',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const events = await Event.find();
-      res.status(200).json(events);
+      const projects = await Project.find();
+      res.status(200).json(projects);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Failed to fetch events' });
+      res.status(500).json({ error: 'Failed to fetch projects' });
     }
   }
 );
 
 app.post(
-  '/api/events',
+  '/api/projects',
   async (req: Request, res: Response, next: NextFunction) => {
-    const { eventName, description, date, startTime, endTime, schoolId } =
+    const { projectName, description, date, startTime, endTime, schoolId } =
       req.body;
 
     try {
-      const newEvent = new Event({
-        eventName,
+      const newProject = new Project({
+        projectName,
         description,
         date,
         startTime,
@@ -93,12 +93,12 @@ app.post(
         schoolId,
       });
 
-      const savedEvent = await newEvent.save();
+      const addedProject = await newProject.save();
 
-      res.status(201).json(savedEvent);
+      res.status(201).json(addedProject);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Failed to create event' });
+      res.status(500).json({ error: 'Failed to create project' });
     }
   }
 );
