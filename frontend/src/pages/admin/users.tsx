@@ -104,7 +104,7 @@ export default function AdminUsersPage() {
 }
 
 function Users() {
-  const [UserAdded, setUserAdded] = useState<boolean>(false);
+  const [userAdded, setUserAdded] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
   const [formData, setFormData] = useState<UserData>(defaultFormData);
   // const [sortOption, setSortOption] = useState<string>('');
@@ -193,7 +193,7 @@ function Users() {
   function ShowMessage() {
     if (hasError) {
       return <Message note="error">Error adding User</Message>;
-    } else if (UserAdded) {
+    } else if (userAdded) {
       return <Message note="success">User has been added</Message>;
     }
     return;

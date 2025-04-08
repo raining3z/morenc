@@ -1,7 +1,7 @@
 import { Input, Textarea, Button, Select } from './FormElements';
 import { type ProjectData } from '../types/projects';
 import { type SchoolData } from '../types/schools';
-import { type UserData } from '../types/users';
+import { type UserData, type UserLogin } from '../types/users';
 import { type ChangeEvent, type FormEvent } from 'react';
 
 import styled from 'styled-components';
@@ -179,7 +179,7 @@ function FormFieldOptions({ formOption, formData, handleChange }: FieldProps) {
               field="email"
               label="Email"
               type="text"
-              value={(formData as UserData).email}
+              value={(formData as UserLogin).email}
               onChange={handleChange}
             />
           </FullWidth>
@@ -188,7 +188,7 @@ function FormFieldOptions({ formOption, formData, handleChange }: FieldProps) {
               field="password"
               label="Password"
               type="password"
-              value={(formData as UserData).password}
+              value={(formData as UserLogin).password}
               onChange={handleChange}
             />
           </FullWidth>

@@ -16,6 +16,13 @@ async function addUser(req: Request, res: Response, next: NextFunction) {
   const { firstName, lastName, email, password } = req.body;
 
   try {
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      res.status(409).json({ error: `${email} already exists` });
+      return;
+    }
+
     const newUser = new User({
       firstName,
       lastName,
@@ -47,4 +54,8 @@ async function deleteUser(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { getUsers, addUser, updateUser, deleteUser };
+async function loginUser(req: Request, res: Response, next: NextFunction) {
+  console.log(req.body);
+}
+
+export { getUsers, addUser, updateUser, deleteUser, loginUser };

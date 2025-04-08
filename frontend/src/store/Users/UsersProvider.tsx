@@ -11,7 +11,7 @@
 import { ReactNode, useEffect, useReducer } from 'react';
 import { UsersContext, UsersContextValue } from './UsersContext';
 
-import { User, UserData } from '../../types/users';
+import { User, UserData, UserLogin } from '../../types/users';
 
 export type UsersState = {
   users: User[];
@@ -28,6 +28,7 @@ const initialState: UsersState = {
 export type UsersMethods = {
   addUser: (user: UserData) => void;
   deleteUser: (_id: string) => void;
+  loginUser: (user: UserLogin) => void;
   updateUserSubmit: (user: User) => void;
   setUpdatingUser: (user: User | null) => void;
   setIsUpdating: (status: boolean) => void;
@@ -52,6 +53,11 @@ type DeleteAction = {
   payload: string;
 };
 
+type LoginAction = {
+  type: 'USER_LOGIN';
+  payload: UserLogin;
+};
+
 type UpdateAction = {
   type: 'UPDATE_PROJECT';
   payload: User;
@@ -72,6 +78,7 @@ type Action =
   | AddAction
   | DeleteAction
   | UpdateAction
+  | LoginAction
   | SetUpdatingUserAction
   | SetIsUpdatingAction;
 
@@ -145,6 +152,10 @@ export function UsersContextProvider({ children }: UsersContextProviderProps) {
         });
 
         if (!response.ok) {
+          if (response.status === 409) {
+            const data = await response.json();
+            throw new Error(data.error || 'Email already exists');
+          }
           throw new Error('Failed to add user');
         }
 
@@ -186,6 +197,31 @@ export function UsersContextProvider({ children }: UsersContextProviderProps) {
 
         const updatedUser = await response.json();
         dispatch({ type: 'UPDATE_PROJECT', payload: updatedUser });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    loginUser: async (user: UserLogin) => {
+      console.log('hello');
+      const { email, password } = user;
+
+      console.log(email, password);
+      try {
+        const response = await fetch(`/api/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(user),
+        });
+
+        console.log(response);
+
+        if (!response.ok) {
+          throw new Error(`Failed to login`);
+        }
+
+        const loginUser = await response.json();
+        dispatch({ type: 'USER_LOGIN', payload: loginUser });
       } catch (error) {
         console.error(error);
       }

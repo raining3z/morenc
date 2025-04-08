@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getSchools, addSchool, deleteSchool } from '../controllers/School';
+import { getSchools, addSchool, deleteSchool } from '../controllers/school';
 
 const router = express.Router();
 
