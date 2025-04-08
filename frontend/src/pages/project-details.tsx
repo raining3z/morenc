@@ -4,8 +4,7 @@ import styled from 'styled-components';
 
 import { Project } from '../types/projects';
 import useSchoolsContext from '../hooks/useSchoolsContext';
-import { ProjectsContextProvider } from '../store/Projects/ProjectsProvider';
-import { SchoolsContextProvider } from '../store/Schools/SchoolsProvider';
+import MainContextProvider from '../store/MainContextProvider';
 
 const ProductItem = styled.div`
   background: #fff;
@@ -53,11 +52,9 @@ const TimeRange = styled.span`
 
 export default function ProjectDetailsPage() {
   return (
-    <ProjectsContextProvider>
-      <SchoolsContextProvider>
-        <ProjectDetail />
-      </SchoolsContextProvider>
-    </ProjectsContextProvider>
+    <MainContextProvider>
+      <ProjectDetail />
+    </MainContextProvider>
   );
 }
 

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ChangeEvent, type FormEvent, useState } from 'react';
 import useSchoolsContext from '../../hooks/useSchoolsContext';
-import { SchoolsContextProvider } from '../../store/Schools/SchoolsProvider';
+import MainContextProvider from '../../store/MainContextProvider';
 import AddForm from '../../components/AddForm';
 import Modal from '../../components/UI/Modal';
 import { SchoolData, School } from '../../types/schools';
@@ -96,9 +96,9 @@ const defaultFormData: SchoolData = {
 
 export default function AdminSchoolsPage() {
   return (
-    <SchoolsContextProvider>
+    <MainContextProvider>
       <Schools />
-    </SchoolsContextProvider>
+    </MainContextProvider>
   );
 }
 

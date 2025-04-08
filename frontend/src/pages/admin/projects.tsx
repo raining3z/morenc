@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ChangeEvent, type FormEvent, useState } from 'react';
 import useProjectsContext from '../../hooks/useProjectsContext';
-import { ProjectsContextProvider } from '../../store/Projects/ProjectsProvider';
+import MainContextProvider from '../../store/MainContextProvider';
 import AddForm from '../../components/AddForm';
 import Modal from '../../components/UI/Modal';
 import { ProjectData, Project } from '../../types/projects';
@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom';
 
 import Message from '../../components/Message';
 import useSchoolsContext from '../../hooks/useSchoolsContext';
-import { SchoolsContextProvider } from '../../store/Schools/SchoolsProvider';
 
 const Container = styled.div`
   display: flex;
@@ -111,11 +110,9 @@ const defaultFormData: ProjectData = {
 
 export default function AdminProjectsPage() {
   return (
-    <ProjectsContextProvider>
-      <SchoolsContextProvider>
-        <Projects />
-      </SchoolsContextProvider>
-    </ProjectsContextProvider>
+    <MainContextProvider>
+      <Projects />
+    </MainContextProvider>
   );
 }
 

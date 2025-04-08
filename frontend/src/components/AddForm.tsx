@@ -49,14 +49,6 @@ interface FormProps extends FieldProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-// export default function AddFormContext() {
-//   return (
-//     <SchoolsContextProvider>
-//       <AddForm />
-//     </SchoolsContextProvider>
-//   );
-// }
-
 function FormFieldOptions({ formOption, formData, handleChange }: FieldProps) {
   switch (formOption) {
     case 'project': {
