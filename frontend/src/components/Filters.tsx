@@ -79,7 +79,6 @@ export default function Filters({
       </FilterTags>
       <FilterOptions>
         {schools.map((school) => {
-          console.log(school._id);
           const schoolName = school.name.replace(/\s+/g, '-');
 
           return (

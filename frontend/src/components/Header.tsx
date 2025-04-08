@@ -25,6 +25,8 @@ const NavBar = styled.nav`
   max-width: ${({ theme }) => theme.widths.maxWidth};
   margin: 0 auto;
   padding: 1rem 2rem;
+  justify-content: space-between;
+  display: flex;
 `;
 
 const NavList = styled.ul`
@@ -90,11 +92,14 @@ const HamburgerIconContainer = styled.div`
   align-items: center;
 `;
 
+// const SignIn = styled(Button)``;
+
 const { navigation } = config;
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [mobileNavIsOpen, setMobileNavIsOpen] = useState<boolean>(false);
+  // const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   const HamburgerIcon = mobileNavIsOpen ? GiHamburgerMenu : FaTimes;
 
@@ -152,6 +157,7 @@ export default function Header() {
               );
             })}
           </NavList>
+          {/* <SignIn onClick={() => setModalIsOpen(true)}>Signin</SignIn> */}
         </NavBar>
       </NavContainer>
     </>

@@ -1,19 +1,20 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import School from './models/School';
 
-import type { Express, Request, Response, NextFunction } from 'express';
+import type { Express } from 'express';
 
-import projectsRouter from './routes/projects';
-import schoolsRouter from './routes/schools';
+import projectRoutes from './routes/projects';
+import schoolRoutes from './routes/schools';
+import userRoutes from './routes/users';
 
 const app: Express = express();
 
 app.use(bodyParser.json());
 
-app.use(projectsRouter);
-app.use(schoolsRouter);
+app.use(projectRoutes);
+app.use(schoolRoutes);
+app.use(userRoutes);
 
 (async () => {
   try {
@@ -26,3 +27,12 @@ app.use(schoolsRouter);
     console.error('MongoDB connection error:', error);
   }
 })();
+
+// when not using TS:
+
+// const express = require('express');
+// const mongoose = require('mongoose');
+// const bodyParser = require('body-parser');
+
+// const projectRoutes = require('./routes/projects');
+// const schoolRoutes = require('./routes/projects');

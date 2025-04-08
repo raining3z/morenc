@@ -5,6 +5,7 @@ import type { Request, Response, NextFunction } from 'express';
 
 const router = express.Router();
 
+// GET all projects
 router.get(
   '/api/projects/:projectId',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -20,6 +21,50 @@ router.get(
   }
 );
 
+// GET single project
+router.get(
+  '/api/projects',
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log('hello');
+    try {
+      const projects = await Project.find();
+      res.status(200).json(projects);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to fetch projects' });
+    }
+  }
+);
+
+// POST project
+router.post(
+  '/api/projects',
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { name, description, date, startTime, endTime, schoolId } = req.body;
+    // const { _id: userId } = req.user._id;
+
+    try {
+      const newProject = new Project({
+        name,
+        description,
+        date,
+        startTime,
+        endTime,
+        schoolId,
+        // userId,
+      });
+
+      const addedProject = await newProject.save();
+
+      res.status(201).json(addedProject);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to create project' });
+    }
+  }
+);
+
+// PATCH project
 router.patch(
   '/api/projects/:projectId',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -41,6 +86,7 @@ router.patch(
   }
 );
 
+// DELETE project
 router.delete(
   '/api/projects/:projectId',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -53,44 +99,6 @@ router.delete(
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: `Failed to delete project ${projectId}` });
-    }
-  }
-);
-
-router.get(
-  '/api/projects',
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const projects = await Project.find();
-      res.status(200).json(projects);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to fetch projects' });
-    }
-  }
-);
-
-router.post(
-  '/api/projects',
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { name, description, date, startTime, endTime, schoolId } = req.body;
-
-    try {
-      const newProject = new Project({
-        name,
-        description,
-        date,
-        startTime,
-        endTime,
-        schoolId,
-      });
-
-      const addedProject = await newProject.save();
-
-      res.status(201).json(addedProject);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to create project' });
     }
   }
 );

@@ -6,8 +6,10 @@ import CompletedProjects from './pages/completed-projects';
 import Header from './components/Header';
 import AdminProjects from './pages/admin/projects';
 import AdminSchools from './pages/admin/schools';
+import AdminUsers from './pages/admin/users';
 
 import styled from 'styled-components';
+import Home from './pages/home';
 
 const MainContainer = styled.div`
   padding-top: 50px;
@@ -32,11 +34,13 @@ export default function App() {
         <Header />
         <Body>
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:_id" element={<ProjectDetails />} />
             <Route path="/completed" element={<CompletedProjects />} />
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/schools" element={<AdminSchools />} />
+            <Route path="/admin/users" element={<AdminUsers />} />
           </Routes>
         </Body>
       </MainContainer>

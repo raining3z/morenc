@@ -21,9 +21,7 @@ router.get(
 router.post(
   '/api/schools',
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log('hell0');
     const { name, address, county } = req.body;
-    console.log(req.body);
 
     try {
       const newSchool = new School({
@@ -43,7 +41,7 @@ router.post(
 );
 
 router.delete(
-  '/api/schools/:school',
+  '/api/schools/:schoolId',
   async (req: Request, res: Response, next: NextFunction) => {
     const { schoolId } = req.params;
 
