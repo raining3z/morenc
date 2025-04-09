@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 import { Project } from '../types/projects';
 import useSchoolsContext from '../hooks/useSchoolsContext';
-import MainContextProvider from '../store/MainContextProvider';
 
 const ProductItem = styled.div`
   background: #fff;
@@ -51,14 +50,6 @@ const TimeRange = styled.span`
 `;
 
 export default function ProjectDetailsPage() {
-  return (
-    <MainContextProvider>
-      <ProjectDetail />
-    </MainContextProvider>
-  );
-}
-
-function ProjectDetail() {
   const [project, setProject] = useState<Project>();
   const { _id: projectId } = useParams();
 

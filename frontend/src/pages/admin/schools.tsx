@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { ChangeEvent, type FormEvent, useState } from 'react';
 import useSchoolsContext from '../../hooks/useSchoolsContext';
-import MainContextProvider from '../../store/MainContextProvider';
 import AddForm from '../../components/AddForm';
 import Modal from '../../components/UI/Modal';
 import { SchoolData, School } from '../../types/schools';
 
 import Message from '../../components/Message';
+import useForm from '../../hooks/useForm';
 
 const Container = styled.div`
   display: flex;
@@ -88,105 +88,29 @@ const ButtonGroup = styled.div`
 
 const SchoolName = styled.div``;
 
-const defaultFormData: SchoolData = {
-  name: '',
-  address: '',
-  county: '',
-};
-
 export default function AdminSchoolsPage() {
-  return (
-    <MainContextProvider>
-      <Schools />
-    </MainContextProvider>
-  );
-}
-
-function Schools() {
-  const [SchoolAdded, setSchoolAdded] = useState<boolean>(false);
-  const [hasError, setHasError] = useState<boolean>(false);
-  const [formData, setFormData] = useState<SchoolData>(defaultFormData);
-  // const [sortOption, setSortOption] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const formOption = 'school';
 
   const {
-    schools,
-    addSchool,
-    deleteSchool,
-    updateSchoolSubmit,
-    isUpdating,
-    updatingSchool,
-    setUpdatingSchool,
-    setIsUpdating,
-  } = useSchoolsContext();
+    addHandler,
+    formData,
+    handleChange,
+    message,
+    modalIsOpen,
+    setModalIsOpen,
+    showFormOption,
+  } = useForm(formOption);
 
-  function handleChange(
-    event: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) {
-    const { name, value } = event.target;
+  const { schools, deleteSchool } = useSchoolsContext();
 
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  }
-
-  function addHandler(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (
-      formData.name === '' ||
-      formData.address === '' ||
-      formData.county === ''
-    ) {
-      setHasError(true);
-      return false;
-    }
-
-    if (isUpdating && updatingSchool) {
-      updateSchoolSubmit({
-        ...updatingSchool,
-        ...formData,
-      });
-
-      // Reset update mode
-      setIsUpdating(false);
-      setUpdatingSchool(null);
-    } else {
-      addSchool({
-        name: formData.name,
-        address: formData.address,
-        county: formData.county,
-      });
-    }
-
-    setFormData(defaultFormData);
-
-    setSchoolAdded(true);
-    setHasError(false);
-    setIsOpen(false);
-  }
-
-  function updateSchool(school: School) {
-    setIsUpdating(true);
-    setUpdatingSchool(school);
-
-    setFormData({
-      name: school.name,
-      address: school.address,
-      county: school.county,
-    });
-  }
-
-  function ShowMessage() {
-    if (hasError) {
-      return <Message note="error">Error adding School</Message>;
-    } else if (SchoolAdded) {
-      return <Message note="success">School has been added</Message>;
-    }
-    return;
-  }
+  // function ShowMessage() {
+  //   if (hasError) {
+  //     return <Message note="error">Error adding School</Message>;
+  //   } else if (SchoolAdded) {
+  //     return <Message note="success">School has been added</Message>;
+  //   }
+  //   return;
+  // }
 
   return (
     <Container>
@@ -194,8 +118,10 @@ function Schools() {
         <Header>
           <Title>Schools</Title>
 
-          <ShowMessage />
-          <AddButton onClick={() => setIsOpen(true)}>Add School</AddButton>
+          {/* <ShowMessage /> */}
+          <AddButton onClick={() => showFormOption(formOption)}>
+            Add School
+          </AddButton>
         </Header>
         <List>
           {schools.map((school, index) => (
@@ -204,7 +130,7 @@ function Schools() {
                 {school.name} / {school.address} / {school.county}
               </SchoolName>
               <ButtonGroup>
-                <button onClick={() => updateSchool(school)}>Update</button>
+                {/* <button onClick={() => updateProject(project)}>Update</button> */}
                 <button onClick={() => deleteSchool(school._id)}>Delete</button>
               </ButtonGroup>
             </ListItem>
@@ -212,14 +138,15 @@ function Schools() {
         </List>
       </Column>
 
-      <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <Modal isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
         <AddForm
-          formOption="school"
+          formOption={formOption}
           addHandler={addHandler}
           formData={formData}
           handleChange={handleChange}
-          isUpdating={isUpdating}
-          setIsOpen={setIsOpen}
+          buttonCopy="Add School"
+          setIsOpen={setModalIsOpen}
+          message={message}
         />
       </Modal>
     </Container>

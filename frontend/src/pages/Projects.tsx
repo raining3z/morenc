@@ -9,7 +9,6 @@ import useSchoolsContext from '../hooks/useSchoolsContext';
 
 import Filters from '../components/Filters';
 import SearchField from '../components/Search';
-import MainContextProvider from '../store/MainContextProvider';
 import { Project } from '../types/projects';
 
 const Grid = styled.div`
@@ -39,14 +38,6 @@ const LeftNav = styled.div`
 `;
 
 export default function ProjectsPage() {
-  return (
-    <MainContextProvider>
-      <Projects />
-    </MainContextProvider>
-  );
-}
-
-function Projects() {
   const [filteredProjects, setFilterProjects] = useState<Project[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [searchInput, setSearchInput] = useState<string>('');

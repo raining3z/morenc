@@ -18,24 +18,28 @@ const FormWrapper = styled.div`
 `;
 
 const StyledForm = styled.form`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
 `;
 
 const FullWidth = styled.div`
-  grid-column: 1 / -1;
+  margin-bottom: 10px;
 `;
 
 const SubmitButtonWrapper = styled.div`
-  grid-column: 2 / 3;
   display: flex;
   justify-content: flex-end;
 `;
 
+const ErrorMessage = styled.div`
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+`;
+
 interface FieldProps {
   formOption: string;
-  formData: ProjectData | SchoolData | UserData;
+  formData: ProjectData | SchoolData | UserData | UserCredentials;
   handleChange: (
     event: ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -45,8 +49,9 @@ interface FieldProps {
 
 interface FormProps extends FieldProps {
   addHandler: (event: FormEvent<HTMLFormElement>) => void;
-  isUpdating: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  message: string;
+  buttonCopy: string;
 }
 
 function FormFieldOptions({ formOption, formData, handleChange }: FieldProps) {
@@ -202,8 +207,9 @@ export default function AddForm({
   addHandler,
   formData,
   handleChange,
-  isUpdating,
   formOption,
+  message,
+  buttonCopy,
 }: FormProps) {
   return (
     <FormWrapper>
@@ -215,12 +221,9 @@ export default function AddForm({
         />
 
         <SubmitButtonWrapper>
-          {isUpdating ? (
-            <Button>Update {formOption}</Button>
-          ) : (
-            <Button>Add {formOption}</Button>
-          )}
+          <Button>{buttonCopy}</Button>
         </SubmitButtonWrapper>
+        {message && <ErrorMessage>{message}</ErrorMessage>}
       </StyledForm>
     </FormWrapper>
   );

@@ -1,15 +1,12 @@
 import styled from 'styled-components';
-import { ChangeEvent, type FormEvent, useState } from 'react';
 import useProjectsContext from '../../hooks/useProjectsContext';
-import MainContextProvider from '../../store/MainContextProvider';
 import AddForm from '../../components/AddForm';
 import Modal from '../../components/UI/Modal';
-import { ProjectData, Project } from '../../types/projects';
 
 import { Link } from 'react-router-dom';
 
-import Message from '../../components/Message';
 import useSchoolsContext from '../../hooks/useSchoolsContext';
+import useForm from '../../hooks/useForm';
 
 const Container = styled.div`
   display: flex;
@@ -99,125 +96,45 @@ const Date = styled.div``;
 
 const TimeRange = styled.div``;
 
-const defaultFormData: ProjectData = {
-  name: '',
-  description: '',
-  date: '',
-  startTime: '',
-  endTime: '',
-  schoolId: '',
-};
-
 export default function AdminProjectsPage() {
-  return (
-    <MainContextProvider>
-      <Projects />
-    </MainContextProvider>
-  );
-}
-
-function Projects() {
-  const [projectAdded, setProjectAdded] = useState<boolean>(false);
-  const [hasError, setHasError] = useState<boolean>(false);
-  const [formData, setFormData] = useState<ProjectData>(defaultFormData);
-  // const [sortOption, setSortOption] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const formOption = 'project';
 
   const {
-    projects,
-    addProject,
-    deleteProject,
-    updateProjectSubmit,
-    isUpdating,
-    updatingProject,
-    setUpdatingProject,
-    setIsUpdating,
-  } = useProjectsContext();
+    addHandler,
+    formData,
+    handleChange,
+    message,
+    modalIsOpen,
+    setModalIsOpen,
+    showFormOption,
+  } = useForm(formOption);
+
+  const { projects, deleteProject } = useProjectsContext();
 
   const { schools } = useSchoolsContext();
 
-  function handleChange(
-    event: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) {
-    const { name, value } = event.target;
+  // function updateProject(project: Project) {
+  //   setIsUpdating(true);
+  //   setUpdatingProject(project);
 
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  }
+  //   setFormData({
+  //     name: project.name,
+  //     description: project.description,
+  //     date: project.date,
+  //     startTime: project.startTime,
+  //     endTime: project.endTime,
+  //     schoolId: project.schoolId,
+  //   });
+  // }
 
-  function addHandler(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (
-      formData.name === '' ||
-      formData.description === '' ||
-      formData.date === '' ||
-      formData.startTime === '' ||
-      formData.endTime === ''
-    ) {
-      setHasError(true);
-      return false;
-    }
-
-    if (isUpdating && updatingProject) {
-      updateProjectSubmit({
-        // id: updatingproject._id,
-        // name: formData.name,
-        // description: formData.description,
-        // date: formData.date,
-        // startTime: formData.startTime,
-        // endTime: formData.endTime,
-        // Do the below instead of above...when you can
-        ...updatingProject, // Keeps the existing ID and any other properties
-        ...formData, // Overwrites only the updated fields
-      });
-
-      // Reset update mode
-      setIsUpdating(false);
-      setUpdatingProject(null);
-    } else {
-      addProject({
-        name: formData.name,
-        description: formData.description,
-        date: formData.date,
-        startTime: formData.startTime,
-        endTime: formData.endTime,
-        schoolId: formData.schoolId,
-      });
-    }
-
-    setFormData(defaultFormData);
-
-    setProjectAdded(true);
-    setHasError(false);
-    setIsOpen(false);
-  }
-
-  function updateProject(project: Project) {
-    setIsUpdating(true);
-    setUpdatingProject(project);
-
-    setFormData({
-      name: project.name,
-      description: project.description,
-      date: project.date,
-      startTime: project.startTime,
-      endTime: project.endTime,
-      schoolId: project.schoolId,
-    });
-  }
-
-  function ShowMessage() {
-    if (hasError) {
-      return <Message note="error">Error adding project</Message>;
-    } else if (projectAdded) {
-      return <Message note="success">Project has been added</Message>;
-    }
-    return;
-  }
+  // function ShowMessage() {
+  //   if (hasError) {
+  //     return <Message note="error">Error adding project</Message>;
+  //   } else if (projectAdded) {
+  //     return <Message note="success">Project has been added</Message>;
+  //   }
+  //   return;
+  // }
 
   return (
     <Container>
@@ -225,8 +142,10 @@ function Projects() {
         <Header>
           <Title>Projects</Title>
 
-          <ShowMessage />
-          <AddButton onClick={() => setIsOpen(true)}>Add Project</AddButton>
+          {/* <ShowMessage /> */}
+          <AddButton onClick={() => showFormOption(formOption)}>
+            Add Project
+          </AddButton>
         </Header>
         <List>
           {projects.map((project, index) => {
@@ -251,7 +170,7 @@ function Projects() {
                 </TimeRange>
 
                 <ButtonGroup>
-                  <button onClick={() => updateProject(project)}>Update</button>
+                  {/* <button onClick={() => updateProject(project)}>Update</button> */}
                   <button onClick={() => deleteProject(project._id)}>
                     Delete
                   </button>
@@ -262,14 +181,15 @@ function Projects() {
         </List>
       </Column>
 
-      <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <Modal isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
         <AddForm
-          formOption="project"
+          formOption={formOption}
           addHandler={addHandler}
           formData={formData}
           handleChange={handleChange}
-          isUpdating={isUpdating}
-          setIsOpen={setIsOpen}
+          buttonCopy="Add Project"
+          setIsOpen={setModalIsOpen}
+          message={message}
         />
       </Modal>
     </Container>

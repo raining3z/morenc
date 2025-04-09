@@ -1,3 +1,5 @@
+export type FormOption = 'signup' | 'project' | 'school' | 'login';
+
 export interface UserCredentials {
   email: string;
   password: string;

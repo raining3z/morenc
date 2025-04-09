@@ -19,7 +19,7 @@ async function addUser(req: Request, res: Response, next: NextFunction) {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      res.status(409).json({ error: `${email} already exists` });
+      res.status(409).json({ error: 'Email address already exists' });
       return;
     }
 
@@ -55,7 +55,23 @@ async function deleteUser(req: Request, res: Response, next: NextFunction) {
 }
 
 async function loginUser(req: Request, res: Response, next: NextFunction) {
-  console.log(req.body);
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ error: 'Email does not exist' });
+    } else if (user.password !== password) {
+      console.log('error on password');
+      return res.status(401).json({ error: 'Passwords don`t match' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to login' });
+  }
 }
 
 export { getUsers, addUser, updateUser, deleteUser, loginUser };

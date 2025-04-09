@@ -16,6 +16,13 @@ async function addSchool(req: Request, res: Response, next: NextFunction) {
   const { name, address, county } = req.body;
 
   try {
+    const school = await School.findOne({ name });
+
+    if (school) {
+      res.status(409).json({ error: 'School already exists' });
+      return;
+    }
+
     const newSchool = new School({
       name,
       address,

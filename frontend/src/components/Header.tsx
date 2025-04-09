@@ -5,6 +5,10 @@ import { Button } from './FormElements';
 
 import config, { NavigationLink } from '../config';
 
+import useForm from '../hooks/useForm';
+
+import { FormOption } from '../types/users';
+
 import styled from 'styled-components';
 import Modal from './UI/Modal';
 import AddForm from './AddForm';
@@ -52,9 +56,9 @@ const NavItem = styled.li`
   position: relative;
   cursor: pointer;
 
-  // &:hover ul {
-  //   display: block;
-  // }
+  &:hover ul {
+    display: block;
+  }
 `;
 
 const NavItemLink = styled.a`
@@ -72,7 +76,7 @@ const Dropdown = styled.ul`
   list-style: none;
   min-width: 150px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  // display: none;
+  display: none;
 `;
 
 const DropdownItem = styled.li`
@@ -95,18 +99,32 @@ const HamburgerIconContainer = styled.div`
   align-items: center;
 `;
 
-const SignIn = styled(Button)``;
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 2em;
+`;
+
+const SignUp = styled(Button)``;
 
 const { navigation } = config;
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [mobileNavIsOpen, setMobileNavIsOpen] = useState<boolean>(false);
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  // TODO: clear this when modal closes?? Both Create Account and Login showing Create Account form fields (in console.log)
+  const [formOption, setFormOption] = useState<FormOption>('signup');
+
+  const {
+    addHandler,
+    formData,
+    handleChange,
+    message,
+    modalIsOpen,
+    setModalIsOpen,
+  } = useForm(formOption);
 
   const HamburgerIcon = mobileNavIsOpen ? GiHamburgerMenu : FaTimes;
 
-  const isMobile = true;
+  const isMobile = false;
 
   // function toggleSubMenu(subNav: NavigationLink[]) {
   //   if (!subNav) {
@@ -118,6 +136,12 @@ export default function Header() {
   //     onMouseLeave: () => setIsOpen(false),
   //   };
   // }
+
+  // TODO: move this to the hook, but need to figure out other TODO above
+  function showFormOption(option: FormOption) {
+    setModalIsOpen(true);
+    setFormOption(option);
+  }
 
   function toggleMobileMenu() {
     setMobileNavIsOpen(!mobileNavIsOpen);
@@ -139,7 +163,7 @@ export default function Header() {
               return (
                 <NavItem key={id}>
                   <NavItemLink href={link}>{label}</NavItemLink>
-                  {subNav && isOpen && (
+                  {subNav && (
                     <Dropdown>
                       {subNav.map((secondary) => {
                         const {
@@ -160,15 +184,21 @@ export default function Header() {
               );
             })}
           </NavList>
-          <SignIn onClick={() => setModalIsOpen(true)}>Signin</SignIn>
-          <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+          <ButtonContainer>
+            <SignUp onClick={() => showFormOption('signup')}>
+              Create Account
+            </SignUp>
+            <SignUp onClick={() => showFormOption('login')}>Login</SignUp>
+          </ButtonContainer>
+          <Modal isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
             <AddForm
-              formOption="signup"
+              formOption={formOption}
               addHandler={addHandler}
               formData={formData}
               handleChange={handleChange}
-              isUpdating={isUpdating}
-              setIsOpen={setIsOpen}
+              buttonCopy={formOption === 'signup' ? 'Create Account' : 'Login'}
+              setIsOpen={setModalIsOpen}
+              message={message}
             />
           </Modal>
         </NavBar>

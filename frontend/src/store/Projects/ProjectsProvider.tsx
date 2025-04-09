@@ -149,13 +149,17 @@ export function ProjectsContextProvider({
         });
 
         if (!response.ok) {
-          throw new Error('Failed to add project');
+          const data = await response.json();
+          throw new Error(data.error);
         }
 
         const addedProject = await response.json();
         dispatch({ type: 'ADD_PROJECT', payload: addedProject });
+
+        return addedProject;
       } catch (error) {
         console.error(error);
+        throw error;
       }
     },
 

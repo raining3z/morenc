@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { ChangeEvent, type FormEvent, useState } from 'react';
 import useUsersContext from '../../hooks/useUsersContext';
-import MainContextProvider from '../../store/MainContextProvider';
 import AddForm from '../../components/AddForm';
 import Modal from '../../components/UI/Modal';
 import { UserData, User } from '../../types/users';
@@ -96,14 +95,6 @@ const defaultFormData: UserData = {
 };
 
 export default function AdminUsersPage() {
-  return (
-    <MainContextProvider>
-      <Users />
-    </MainContextProvider>
-  );
-}
-
-function Users() {
   const [userAdded, setUserAdded] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
   const [formData, setFormData] = useState<UserData>(defaultFormData);

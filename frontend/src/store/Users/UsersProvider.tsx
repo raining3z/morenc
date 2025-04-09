@@ -39,17 +39,17 @@ type UsersContextProviderProps = {
 };
 
 type LoadAction = {
-  type: 'LOAD_PROJECTS';
+  type: 'LOAD_USERS';
   payload: User[];
 };
 
 type AddAction = {
-  type: 'ADD_PROJECT';
+  type: 'ADD_USER';
   payload: User;
 };
 
 type DeleteAction = {
-  type: 'DELETE_PROJECT';
+  type: 'DELETE_USER';
   payload: string;
 };
 
@@ -59,12 +59,12 @@ type LoginAction = {
 };
 
 type UpdateAction = {
-  type: 'UPDATE_PROJECT';
+  type: 'UPDATE_USER';
   payload: User;
 };
 
 type SetUpdatingUserAction = {
-  type: 'SET_UPDATING_PROJECT';
+  type: 'SET_UPDATING_USER';
   payload: User | null;
 };
 
@@ -84,22 +84,22 @@ type Action =
 
 function usersReducer(state: UsersState, action: Action): UsersState {
   switch (action.type) {
-    case 'LOAD_PROJECTS':
+    case 'LOAD_USERS':
       return {
         ...state,
         users: action.payload,
       };
-    case 'ADD_PROJECT':
+    case 'ADD_USER':
       return {
         ...state,
         users: [...state.users, action.payload],
       };
-    case 'DELETE_PROJECT':
+    case 'DELETE_USER':
       return {
         ...state,
         users: state.users.filter((user) => user._id !== action.payload),
       };
-    case 'UPDATE_PROJECT':
+    case 'UPDATE_USER':
       return {
         ...state,
         users: state.users.map((user) =>
@@ -110,7 +110,7 @@ function usersReducer(state: UsersState, action: Action): UsersState {
             : user
         ),
       };
-    case 'SET_UPDATING_PROJECT':
+    case 'SET_UPDATING_USER':
       return { ...state, updatingUser: action.payload };
     case 'SET_IS_UPDATING':
       return { ...state, isUpdating: action.payload };
@@ -129,7 +129,7 @@ export function UsersContextProvider({ children }: UsersContextProviderProps) {
         const response = await fetch('/api/users');
         const data = await response.json();
 
-        dispatch({ type: 'LOAD_PROJECTS', payload: data });
+        dispatch({ type: 'LOAD_USERS', payload: data });
       } catch (error) {
         console.error(error);
       }
@@ -154,15 +154,18 @@ export function UsersContextProvider({ children }: UsersContextProviderProps) {
         if (!response.ok) {
           if (response.status === 409) {
             const data = await response.json();
-            throw new Error(data.error || 'Email already exists');
+            throw new Error(data.error);
           }
           throw new Error('Failed to add user');
         }
 
         const addedUser = await response.json();
-        dispatch({ type: 'ADD_PROJECT', payload: addedUser });
+        dispatch({ type: 'ADD_USER', payload: addedUser });
+
+        return addedUser; // need this to await any response (i.e. on useForm)
       } catch (error) {
         console.error(error);
+        throw error; // need this to show error (i.e. setMessage on useForm)
       }
     },
 
@@ -176,7 +179,7 @@ export function UsersContextProvider({ children }: UsersContextProviderProps) {
           throw new Error(`Failed to delete user ${userId}`);
         }
 
-        dispatch({ type: 'DELETE_PROJECT', payload: userId });
+        dispatch({ type: 'DELETE_USER', payload: userId });
       } catch (error) {
         console.error(error);
       }
@@ -196,17 +199,13 @@ export function UsersContextProvider({ children }: UsersContextProviderProps) {
         }
 
         const updatedUser = await response.json();
-        dispatch({ type: 'UPDATE_PROJECT', payload: updatedUser });
+        dispatch({ type: 'UPDATE_USER', payload: updatedUser });
       } catch (error) {
         console.error(error);
       }
     },
 
     loginUser: async (user: UserCredentials) => {
-      console.log('hello');
-      const { email, password } = user;
-
-      console.log(email, password);
       try {
         const response = await fetch(`/api/login`, {
           method: 'POST',
@@ -214,21 +213,22 @@ export function UsersContextProvider({ children }: UsersContextProviderProps) {
           body: JSON.stringify(user),
         });
 
-        console.log(response);
-
         if (!response.ok) {
-          throw new Error(`Failed to login`);
+          const data = await response.json();
+          throw new Error(data.error);
         }
 
         const loginUser = await response.json();
         dispatch({ type: 'USER_LOGIN', payload: loginUser });
+        return loginUser;
       } catch (error) {
         console.error(error);
+        throw error;
       }
     },
 
     setUpdatingUser(user) {
-      dispatch({ type: 'SET_UPDATING_PROJECT', payload: user });
+      dispatch({ type: 'SET_UPDATING_USER', payload: user });
     },
 
     setIsUpdating(status) {

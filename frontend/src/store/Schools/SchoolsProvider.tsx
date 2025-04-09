@@ -149,13 +149,17 @@ export function SchoolsContextProvider({
         });
 
         if (!response.ok) {
-          throw new Error('Failed to add school');
+          const data = await response.json();
+          throw new Error(data.error);
         }
 
         const addedSchool = await response.json();
         dispatch({ type: 'ADD_SCHOOL', payload: addedSchool });
+
+        return addedSchool;
       } catch (error) {
         console.error(error);
+        throw error;
       }
     },
 

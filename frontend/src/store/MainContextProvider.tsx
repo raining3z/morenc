@@ -3,16 +3,23 @@ import { ProjectsContextProvider } from './Projects/ProjectsProvider';
 import { SchoolsContextProvider } from './Schools/SchoolsProvider';
 import { ReactNode } from 'react';
 
+import { ThemeProvider } from 'styled-components';
+import { theme } from '../theme';
+import { GlobalStyle } from '../globalStyles';
+
 interface MainProviderProps {
   children: ReactNode;
 }
 
 export default function MainContextProvider({ children }: MainProviderProps) {
   return (
-    <UsersContextProvider>
-      <ProjectsContextProvider>
-        <SchoolsContextProvider>{children}</SchoolsContextProvider>
-      </ProjectsContextProvider>
-    </UsersContextProvider>
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <UsersContextProvider>
+        <ProjectsContextProvider>
+          <SchoolsContextProvider>{children}</SchoolsContextProvider>
+        </ProjectsContextProvider>
+      </UsersContextProvider>
+    </ThemeProvider>
   );
 }

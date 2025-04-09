@@ -33,6 +33,13 @@ async function addProject(req: Request, res: Response, next: NextFunction) {
   // const { _id: userId } = req.user._id;
 
   try {
+    const project = await Project.findOne({ name });
+
+    if (project) {
+      res.status(409).json({ error: 'School already exists' });
+      return;
+    }
+
     const newProject = new Project({
       name,
       description,
