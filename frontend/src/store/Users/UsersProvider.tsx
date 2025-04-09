@@ -11,7 +11,7 @@
 import { ReactNode, useEffect, useReducer } from 'react';
 import { UsersContext, UsersContextValue } from './UsersContext';
 
-import { User, UserData, UserLogin } from '../../types/users';
+import { User, UserData, UserCredentials } from '../../types/users';
 
 export type UsersState = {
   users: User[];
@@ -28,7 +28,7 @@ const initialState: UsersState = {
 export type UsersMethods = {
   addUser: (user: UserData) => void;
   deleteUser: (_id: string) => void;
-  loginUser: (user: UserLogin) => void;
+  loginUser: (user: UserCredentials) => void;
   updateUserSubmit: (user: User) => void;
   setUpdatingUser: (user: User | null) => void;
   setIsUpdating: (status: boolean) => void;
@@ -55,7 +55,7 @@ type DeleteAction = {
 
 type LoginAction = {
   type: 'USER_LOGIN';
-  payload: UserLogin;
+  payload: UserCredentials;
 };
 
 type UpdateAction = {
@@ -202,7 +202,7 @@ export function UsersContextProvider({ children }: UsersContextProviderProps) {
       }
     },
 
-    loginUser: async (user: UserLogin) => {
+    loginUser: async (user: UserCredentials) => {
       console.log('hello');
       const { email, password } = user;
 

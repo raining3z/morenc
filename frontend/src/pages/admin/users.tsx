@@ -148,15 +148,8 @@ function Users() {
 
     if (isUpdating && updatingUser) {
       updateUserSubmit({
-        // id: updatingUser._id,
-        // name: formData.name,
-        // description: formData.description,
-        // date: formData.date,
-        // startTime: formData.startTime,
-        // endTime: formData.endTime,
-        // Do the below instead of above...when you can
-        ...updatingUser, // Keeps the existing ID and any other properties
-        ...formData, // Overwrites only the updated fields
+        ...updatingUser,
+        ...formData,
       });
 
       // Reset update mode

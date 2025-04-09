@@ -1,7 +1,7 @@
 import { Input, Textarea, Button, Select } from './FormElements';
 import { type ProjectData } from '../types/projects';
 import { type SchoolData } from '../types/schools';
-import { type UserData, type UserLogin } from '../types/users';
+import { type UserData, type UserCredentials } from '../types/users';
 import { type ChangeEvent, type FormEvent } from 'react';
 
 import styled from 'styled-components';
@@ -146,32 +146,38 @@ function FormFieldOptions({ formOption, formData, handleChange }: FieldProps) {
       );
 
     case 'signup':
+    case 'login':
       return (
         <>
-          <FullWidth>
-            <Input
-              field="firstName"
-              label="First Name"
-              type="text"
-              value={(formData as UserData).firstName}
-              onChange={handleChange}
-            />
-          </FullWidth>
-          <FullWidth>
-            <Input
-              field="lastName"
-              label="Last Name"
-              type="text"
-              value={(formData as UserData).lastName}
-              onChange={handleChange}
-            />
-          </FullWidth>
+          {formOption === 'signup' && (
+            <>
+              <FullWidth>
+                <Input
+                  field="firstName"
+                  label="First Name"
+                  type="text"
+                  value={(formData as UserData).firstName}
+                  onChange={handleChange}
+                />
+              </FullWidth>
+              <FullWidth>
+                <Input
+                  field="lastName"
+                  label="Last Name"
+                  type="text"
+                  value={(formData as UserData).lastName}
+                  onChange={handleChange}
+                />
+              </FullWidth>
+            </>
+          )}
+
           <FullWidth>
             <Input
               field="email"
               label="Email"
               type="text"
-              value={(formData as UserLogin).email}
+              value={(formData as UserCredentials).email}
               onChange={handleChange}
             />
           </FullWidth>
@@ -180,7 +186,7 @@ function FormFieldOptions({ formOption, formData, handleChange }: FieldProps) {
               field="password"
               label="Password"
               type="password"
-              value={(formData as UserLogin).password}
+              value={(formData as UserCredentials).password}
               onChange={handleChange}
             />
           </FullWidth>

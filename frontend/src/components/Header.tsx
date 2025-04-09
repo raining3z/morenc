@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { FaTimes } from 'react-icons/fa';
+import { Button } from './FormElements';
 
 import config, { NavigationLink } from '../config';
 
 import styled from 'styled-components';
+import Modal from './UI/Modal';
+import AddForm from './AddForm';
 
 const NavContainer = styled.div<{ mobileNavIsOpen: boolean }>`
   width: 100%;
@@ -92,29 +95,29 @@ const HamburgerIconContainer = styled.div`
   align-items: center;
 `;
 
-// const SignIn = styled(Button)``;
+const SignIn = styled(Button)``;
 
 const { navigation } = config;
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [mobileNavIsOpen, setMobileNavIsOpen] = useState<boolean>(false);
-  // const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   const HamburgerIcon = mobileNavIsOpen ? GiHamburgerMenu : FaTimes;
 
   const isMobile = true;
 
-  function toggleSubMenu(subNav: NavigationLink[]) {
-    if (!subNav) {
-      return null;
-    }
+  // function toggleSubMenu(subNav: NavigationLink[]) {
+  //   if (!subNav) {
+  //     return null;
+  //   }
 
-    return {
-      onMouseEnter: () => setIsOpen(true),
-      onMouseLeave: () => setIsOpen(false),
-    };
-  }
+  //   return {
+  //     onMouseEnter: () => setIsOpen(true),
+  //     onMouseLeave: () => setIsOpen(false),
+  //   };
+  // }
 
   function toggleMobileMenu() {
     setMobileNavIsOpen(!mobileNavIsOpen);
@@ -157,7 +160,17 @@ export default function Header() {
               );
             })}
           </NavList>
-          {/* <SignIn onClick={() => setModalIsOpen(true)}>Signin</SignIn> */}
+          <SignIn onClick={() => setModalIsOpen(true)}>Signin</SignIn>
+          <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+            <AddForm
+              formOption="signup"
+              addHandler={addHandler}
+              formData={formData}
+              handleChange={handleChange}
+              isUpdating={isUpdating}
+              setIsOpen={setIsOpen}
+            />
+          </Modal>
         </NavBar>
       </NavContainer>
     </>

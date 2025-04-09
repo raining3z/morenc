@@ -146,15 +146,8 @@ function Schools() {
 
     if (isUpdating && updatingSchool) {
       updateSchoolSubmit({
-        // id: updatingSchool._id,
-        // name: formData.name,
-        // description: formData.description,
-        // date: formData.date,
-        // startTime: formData.startTime,
-        // endTime: formData.endTime,
-        // Do the below instead of above...when you can
-        ...updatingSchool, // Keeps the existing ID and any other properties
-        ...formData, // Overwrites only the updated fields
+        ...updatingSchool,
+        ...formData,
       });
 
       // Reset update mode

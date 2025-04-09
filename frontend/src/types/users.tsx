@@ -1,9 +1,9 @@
-export interface UserLogin {
+export interface UserCredentials {
   email: string;
   password: string;
 }
 
-export interface UserData extends UserLogin {
+export interface UserData extends UserCredentials {
   firstName: string;
   lastName: string;
 }
