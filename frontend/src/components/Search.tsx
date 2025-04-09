@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { type ChangeEvent } from 'react';
+import styled from 'styled-components';
 
 interface SearchProps {
   searchInput: string;

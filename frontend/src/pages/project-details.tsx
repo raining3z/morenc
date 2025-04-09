@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { Project } from '../types/projects';
 import useSchoolsContext from '../hooks/useSchoolsContext';
+import { Project } from '../types/projects';
 
 const ProductItem = styled.div`
   background: #fff;

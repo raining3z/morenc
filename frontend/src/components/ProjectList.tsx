@@ -1,6 +1,8 @@
-import { type Project as ProjectProps } from '../types/projects';
-import ProjectCard from './ProjectCard';
 import styled from 'styled-components';
+
+import { type Project as ProjectProps } from '../types/projects';
+
+import ProjectCard from './ProjectCard';
 
 const ProjectsGrid = styled.div`
   display: grid;

@@ -1,12 +1,13 @@
-import { Input, Textarea, Button, Select } from './FormElements';
-import { type ProjectData } from '../types/projects';
-import { type SchoolData } from '../types/schools';
-import { type UserData, type UserCredentials } from '../types/users';
-import { type ChangeEvent, type FormEvent } from 'react';
-
 import styled from 'styled-components';
 
 import useSchoolsContext from '../hooks/useSchoolsContext';
+import { type ProjectData } from '../types/projects';
+import { type SchoolData } from '../types/schools';
+
+import { Input, Textarea, Button, Select } from './FormElements';
+
+import type { UserData, UserCredentials } from '../types/users';
+import type { ChangeEvent, FormEvent } from 'react';
 
 const FormWrapper = styled.div`
   max-width: 800px;

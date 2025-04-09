@@ -1,17 +1,15 @@
 import { useState } from 'react';
-import { GiHamburgerMenu } from 'react-icons/gi';
 import { FaTimes } from 'react-icons/fa';
-import { Button } from './FormElements';
+import { GiHamburgerMenu } from 'react-icons/gi';
+import styled from 'styled-components';
 
-import config, { NavigationLink } from '../config';
-
+import config from '../config';
 import useForm from '../hooks/useForm';
-
 import { FormOption } from '../types/users';
 
-import styled from 'styled-components';
-import Modal from './UI/Modal';
 import AddForm from './AddForm';
+import { Button } from './FormElements';
+import Modal from './UI/Modal';
 
 const NavContainer = styled.div<{ mobileNavIsOpen: boolean }>`
   width: 100%;
@@ -118,8 +116,8 @@ export default function Header() {
     formData,
     handleChange,
     message,
-    modalIsOpen,
-    setModalIsOpen,
+    isModalOpen,
+    setIsModalOpen,
   } = useForm(formOption);
 
   const HamburgerIcon = mobileNavIsOpen ? GiHamburgerMenu : FaTimes;
@@ -139,7 +137,7 @@ export default function Header() {
 
   // TODO: move this to the hook, but need to figure out other TODO above
   function showFormOption(option: FormOption) {
-    setModalIsOpen(true);
+    setIsModalOpen(true);
     setFormOption(option);
   }
 
@@ -190,14 +188,14 @@ export default function Header() {
             </SignUp>
             <SignUp onClick={() => showFormOption('login')}>Login</SignUp>
           </ButtonContainer>
-          <Modal isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
+          <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
             <AddForm
               formOption={formOption}
               addHandler={addHandler}
               formData={formData}
               handleChange={handleChange}
               buttonCopy={formOption === 'signup' ? 'Create Account' : 'Login'}
-              setIsOpen={setModalIsOpen}
+              setIsOpen={setIsModalOpen}
               message={message}
             />
           </Modal>

@@ -9,9 +9,10 @@
 // )
 
 import { ReactNode, useEffect, useReducer } from 'react';
-import { ProjectsContext, ProjectsContextValue } from './ProjectsContext';
 
 import { Project, ProjectData } from '../../types/projects';
+
+import { ProjectsContext, ProjectsContextValue } from './ProjectsContext';
 
 export type ProjectsState = {
   projects: Project[];
@@ -26,9 +27,10 @@ const initialState: ProjectsState = {
 };
 
 export type ProjectsMethods = {
-  addProject: (project: ProjectData) => void;
+  addProject: (project: ProjectData) => Promise<ProjectData>;
+  // getProject: (_id: string) => void;
   deleteProject: (_id: string) => void;
-  updateProjectSubmit: (project: Project) => void;
+  updateProjectSubmit: (project: Project) => Promise<Project>;
   setUpdatingProject: (project: Project | null) => void;
   setIsUpdating: (status: boolean) => void;
 };
@@ -45,6 +47,11 @@ type LoadAction = {
 type AddAction = {
   type: 'ADD_PROJECT';
   payload: Project;
+};
+
+type GetAction = {
+  type: 'GET_PROJECT';
+  payload: string;
 };
 
 type DeleteAction = {
@@ -70,6 +77,7 @@ type SetIsUpdatingAction = {
 type Action =
   | LoadAction
   | AddAction
+  | GetAction
   | DeleteAction
   | UpdateAction
   | SetUpdatingProjectAction
@@ -87,6 +95,16 @@ function projectsReducer(state: ProjectsState, action: Action): ProjectsState {
         ...state,
         projects: [...state.projects, action.payload],
       };
+    // case 'GET_PROJECT': {
+    //   const product = state.projects.find(
+    //     (project) => project._id === action.payload
+    //   );
+    //   console.log(product);
+    //   return {
+    //     ...state,
+    //     projects: [],
+    //   };
+    // }
     case 'DELETE_PROJECT':
       return {
         ...state,
@@ -120,6 +138,7 @@ export function ProjectsContextProvider({
 }: ProjectsContextProviderProps) {
   const [projectsState, dispatch] = useReducer(projectsReducer, initialState);
 
+  // TODO:  this shouldbe inside const ctx: ProjectsContextValue ?
   useEffect(() => {
     async function fetchProjects() {
       try {
@@ -163,6 +182,10 @@ export function ProjectsContextProvider({
       }
     },
 
+    // getProject: async (projectId: string) => {
+    //   console.log(projectId);
+    // },
+
     deleteProject: async (projectId: string) => {
       try {
         const response = await fetch(`/api/projects/${projectId}`, {
@@ -181,6 +204,7 @@ export function ProjectsContextProvider({
 
     updateProjectSubmit: async (project: Project) => {
       const { _id: projectId } = project;
+
       try {
         const response = await fetch(`/api/projects/${projectId}`, {
           method: 'PATCH',
@@ -189,13 +213,17 @@ export function ProjectsContextProvider({
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to update project ${projectId}`);
+          const data = await response.json();
+          throw new Error(data.error);
         }
 
         const updatedProject = await response.json();
         dispatch({ type: 'UPDATE_PROJECT', payload: updatedProject });
+
+        return updatedProject;
       } catch (error) {
         console.error(error);
+        throw error;
       }
     },
 

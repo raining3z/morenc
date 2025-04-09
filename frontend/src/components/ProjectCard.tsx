@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { type Project } from '../types/projects';
-
 import styled from 'styled-components';
+
 import useSchoolsContext from '../hooks/useSchoolsContext';
+import { type Project } from '../types/projects';
 
 const ProductItem = styled.div`
   background: #fff;

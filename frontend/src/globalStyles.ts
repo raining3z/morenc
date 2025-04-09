@@ -14,6 +14,10 @@ export const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.colors.text};
   }
 
+  img {
+    max-width: 100%;
+  }
+
   input[type="text"],
   input[type="email"],
   input[type="password"],

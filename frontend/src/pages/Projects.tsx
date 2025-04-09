@@ -1,14 +1,10 @@
 import { type ChangeEvent, useState, useRef, useEffect } from 'react';
-
 import styled from 'styled-components';
 
-import ProjectList from '../components/ProjectList';
-
-import useProjectsContext from '../hooks/useProjectsContext';
-import useSchoolsContext from '../hooks/useSchoolsContext';
-
 import Filters from '../components/Filters';
+import ProjectList from '../components/ProjectList';
 import SearchField from '../components/Search';
+import { useProjectsContext, useSchoolsContext } from '../hooks';
 import { Project } from '../types/projects';
 
 const Grid = styled.div`

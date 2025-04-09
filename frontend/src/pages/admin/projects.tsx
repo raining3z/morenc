@@ -1,12 +1,9 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import useProjectsContext from '../../hooks/useProjectsContext';
+
 import AddForm from '../../components/AddForm';
 import Modal from '../../components/UI/Modal';
-
-import { Link } from 'react-router-dom';
-
-import useSchoolsContext from '../../hooks/useSchoolsContext';
-import useForm from '../../hooks/useForm';
+import { useSchoolsContext, useProjectsContext, useForm } from '../../hooks';
 
 const Container = styled.div`
   display: flex;
@@ -54,6 +51,9 @@ const List = styled.ul`
   list-style: none;
   padding-left: 0;
   margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
 `;
 
 const ListItem = styled.li`
@@ -104,28 +104,15 @@ export default function AdminProjectsPage() {
     formData,
     handleChange,
     message,
-    modalIsOpen,
-    setModalIsOpen,
+    isModalOpen,
+    setIsModalOpen,
     showFormOption,
+    updateFormFields,
   } = useForm(formOption);
 
   const { projects, deleteProject } = useProjectsContext();
 
   const { schools } = useSchoolsContext();
-
-  // function updateProject(project: Project) {
-  //   setIsUpdating(true);
-  //   setUpdatingProject(project);
-
-  //   setFormData({
-  //     name: project.name,
-  //     description: project.description,
-  //     date: project.date,
-  //     startTime: project.startTime,
-  //     endTime: project.endTime,
-  //     schoolId: project.schoolId,
-  //   });
-  // }
 
   // function ShowMessage() {
   //   if (hasError) {
@@ -156,6 +143,10 @@ export default function AdminProjectsPage() {
 
             return (
               <ListItem key={index}>
+                <img
+                  src="https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3917376.png&w=350&h=254"
+                  alt={project.name}
+                />
                 <SchoolName>{schoolName}</SchoolName>
 
                 <ProjectLink to={`/projects/${project._id}`}>
@@ -170,7 +161,9 @@ export default function AdminProjectsPage() {
                 </TimeRange>
 
                 <ButtonGroup>
-                  {/* <button onClick={() => updateProject(project)}>Update</button> */}
+                  <button onClick={() => updateFormFields(project)}>
+                    Update
+                  </button>
                   <button onClick={() => deleteProject(project._id)}>
                     Delete
                   </button>
@@ -181,14 +174,14 @@ export default function AdminProjectsPage() {
         </List>
       </Column>
 
-      <Modal isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
+      <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
         <AddForm
           formOption={formOption}
           addHandler={addHandler}
           formData={formData}
           handleChange={handleChange}
           buttonCopy="Add Project"
-          setIsOpen={setModalIsOpen}
+          setIsOpen={setIsModalOpen}
           message={message}
         />
       </Modal>

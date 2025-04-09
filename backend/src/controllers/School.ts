@@ -38,7 +38,22 @@ async function addSchool(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function updateSchool(req: Request, res: Response, next: NextFunction) {}
+async function updateSchool(req: Request, res: Response, next: NextFunction) {
+  const { _id: schoolId, ...updatedFields } = req.body;
+
+  try {
+    const school = await School.findByIdAndUpdate(
+      schoolId,
+      { $set: updatedFields },
+      { new: true }
+    );
+
+    res.status(200).json(school);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: `Failed to update project ${schoolId}` });
+  }
+}
 
 async function deleteSchool(req: Request, res: Response, next: NextFunction) {
   const { schoolId } = req.params;
@@ -53,4 +68,4 @@ async function deleteSchool(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { getSchools, addSchool, updateSchool, deleteSchool };
+export { getSchools, addSchool, deleteSchool, updateSchool };

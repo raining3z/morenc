@@ -1,15 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import styled from 'styled-components';
 
-import Projects from './pages/projects';
-import ProjectDetails from './pages/project-details';
-import CompletedProjects from './pages/completed-projects';
 import Header from './components/Header';
 import AdminProjects from './pages/admin/projects';
 import AdminSchools from './pages/admin/schools';
 import AdminUsers from './pages/admin/users';
-
-import styled from 'styled-components';
+import CompletedProjects from './pages/completed-projects';
 import Home from './pages/home';
+import ProjectDetails from './pages/project-details';
+import Projects from './pages/projects';
 
 const MainContainer = styled.div`
   padding-top: 50px;

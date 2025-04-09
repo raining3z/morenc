@@ -1,10 +1,10 @@
 import { type RefObject, type ChangeEvent } from 'react';
+import { FaTimes } from 'react-icons/fa';
 import styled from 'styled-components';
+
 import { type School } from '../config';
 
 // TODO: organize the types.  above is being pulled from config, others from types
-
-import { FaTimes } from 'react-icons/fa';
 
 interface FilterProps {
   schools: School[];

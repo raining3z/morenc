@@ -9,9 +9,11 @@
 // )
 
 import { ReactNode, useEffect, useReducer } from 'react';
-import { UsersContext, UsersContextValue } from './UsersContext';
 
 import { User, UserData, UserCredentials } from '../../types/users';
+
+import { UsersContext, UsersContextValue } from './UsersContext';
+
 
 export type UsersState = {
   users: User[];
@@ -26,10 +28,10 @@ const initialState: UsersState = {
 };
 
 export type UsersMethods = {
-  addUser: (user: UserData) => void;
+  addUser: (user: UserData) => Promise<UserData>;
   deleteUser: (_id: string) => void;
   loginUser: (user: UserCredentials) => void;
-  updateUserSubmit: (user: User) => void;
+  updateUserSubmit: (user: User) => Promise<User>;
   setUpdatingUser: (user: User | null) => void;
   setIsUpdating: (status: boolean) => void;
 };
@@ -200,14 +202,17 @@ export function UsersContextProvider({ children }: UsersContextProviderProps) {
 
         const updatedUser = await response.json();
         dispatch({ type: 'UPDATE_USER', payload: updatedUser });
+
+        return updatedUser;
       } catch (error) {
         console.error(error);
+        throw error;
       }
     },
 
     loginUser: async (user: UserCredentials) => {
       try {
-        const response = await fetch(`/api/login`, {
+        const response = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(user),

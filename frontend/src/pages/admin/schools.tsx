@@ -1,12 +1,8 @@
 import styled from 'styled-components';
-import { ChangeEvent, type FormEvent, useState } from 'react';
-import useSchoolsContext from '../../hooks/useSchoolsContext';
+
 import AddForm from '../../components/AddForm';
 import Modal from '../../components/UI/Modal';
-import { SchoolData, School } from '../../types/schools';
-
-import Message from '../../components/Message';
-import useForm from '../../hooks/useForm';
+import { useSchoolsContext, useForm } from '../../hooks';
 
 const Container = styled.div`
   display: flex;
@@ -54,6 +50,9 @@ const List = styled.ul`
   list-style: none;
   padding-left: 0;
   margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
 `;
 
 const ListItem = styled.li`
@@ -86,7 +85,9 @@ const ButtonGroup = styled.div`
   }
 `;
 
-const SchoolName = styled.div``;
+const SchoolName = styled.div`
+  margin-bottom: 10px;
+`;
 
 export default function AdminSchoolsPage() {
   const formOption = 'school';
@@ -96,9 +97,10 @@ export default function AdminSchoolsPage() {
     formData,
     handleChange,
     message,
-    modalIsOpen,
-    setModalIsOpen,
+    isModalOpen,
+    setIsModalOpen,
     showFormOption,
+    updateFormFields,
   } = useForm(formOption);
 
   const { schools, deleteSchool } = useSchoolsContext();
@@ -127,10 +129,12 @@ export default function AdminSchoolsPage() {
           {schools.map((school, index) => (
             <ListItem key={index}>
               <SchoolName>
-                {school.name} / {school.address} / {school.county}
+                <SchoolName>{school.name}</SchoolName>{' '}
+                <SchoolName>{school.address}</SchoolName>{' '}
+                <SchoolName>{school.county}</SchoolName>
               </SchoolName>
               <ButtonGroup>
-                {/* <button onClick={() => updateProject(project)}>Update</button> */}
+                <button onClick={() => updateFormFields(school)}>Update</button>
                 <button onClick={() => deleteSchool(school._id)}>Delete</button>
               </ButtonGroup>
             </ListItem>
@@ -138,14 +142,14 @@ export default function AdminSchoolsPage() {
         </List>
       </Column>
 
-      <Modal isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
+      <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
         <AddForm
           formOption={formOption}
           addHandler={addHandler}
           formData={formData}
           handleChange={handleChange}
           buttonCopy="Add School"
-          setIsOpen={setModalIsOpen}
+          setIsOpen={setIsModalOpen}
           message={message}
         />
       </Modal>

@@ -1,5 +1,6 @@
-import { SchoolsContext } from '../store/Schools/SchoolsContext';
 import { useContext } from 'react';
+
+import { SchoolsContext } from '../store/Schools/SchoolsContext';
 
 export default function useSchoolsContext() {
   const schoolsCtx = useContext(SchoolsContext);

@@ -9,9 +9,10 @@
 // )
 
 import { ReactNode, useEffect, useReducer } from 'react';
-import { SchoolsContext, SchoolsContextValue } from './SchoolsContext';
 
 import { School, SchoolData } from '../../types/schools';
+
+import { SchoolsContext, SchoolsContextValue } from './SchoolsContext';
 
 export type SchoolsState = {
   schools: School[];
@@ -26,9 +27,9 @@ const initialState: SchoolsState = {
 };
 
 export type SchoolsMethods = {
-  addSchool: (school: SchoolData) => void;
+  addSchool: (school: SchoolData) => Promise<SchoolData>;
   deleteSchool: (_id: string) => void;
-  updateSchoolSubmit: (school: School) => void;
+  updateSchoolSubmit: (school: School) => Promise<School>;
   setUpdatingSchool: (school: School | null) => void;
   setIsUpdating: (status: boolean) => void;
 };
@@ -194,8 +195,11 @@ export function SchoolsContextProvider({
 
         const updatedSchool = await response.json();
         dispatch({ type: 'UPDATE_SCHOOL', payload: updatedSchool });
+
+        return updatedSchool;
       } catch (error) {
         console.error(error);
+        throw error;
       }
     },
 

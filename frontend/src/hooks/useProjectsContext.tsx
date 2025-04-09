@@ -1,5 +1,6 @@
-import { ProjectsContext } from '../store/Projects/ProjectsContext';
 import { useContext } from 'react';
+
+import { ProjectsContext } from '../store/Projects/ProjectsContext';
 
 export default function useProjectsContext() {
   const projectsCtx = useContext(ProjectsContext);

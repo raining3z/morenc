@@ -60,8 +60,7 @@ async function addProject(req: Request, res: Response, next: NextFunction) {
 }
 
 async function updateProject(req: Request, res: Response, next: NextFunction) {
-  const { projectId } = req.params;
-  const { ...updatedFields } = req.body;
+  const { _id: projectId, ...updatedFields } = req.body;
 
   try {
     const project = await Project.findByIdAndUpdate(

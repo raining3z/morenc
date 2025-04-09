@@ -1,5 +1,6 @@
-import { UsersContext } from '../store/Users/UsersContext';
 import { useContext } from 'react';
+
+import { UsersContext } from '../store/Users/UsersContext';
 
 export default function useUsersContext() {
   const usersCtx = useContext(UsersContext);

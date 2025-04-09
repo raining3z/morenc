@@ -1,11 +1,12 @@
-import { UsersContextProvider } from './Users/UsersProvider';
+import { ReactNode } from 'react';
+import { ThemeProvider } from 'styled-components';
+
+import { GlobalStyle } from '../globalStyles';
+import { theme } from '../theme';
+
 import { ProjectsContextProvider } from './Projects/ProjectsProvider';
 import { SchoolsContextProvider } from './Schools/SchoolsProvider';
-import { ReactNode } from 'react';
-
-import { ThemeProvider } from 'styled-components';
-import { theme } from '../theme';
-import { GlobalStyle } from '../globalStyles';
+import { UsersContextProvider } from './Users/UsersProvider';
 
 interface MainProviderProps {
   children: ReactNode;

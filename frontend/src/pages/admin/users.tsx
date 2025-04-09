@@ -1,11 +1,8 @@
 import styled from 'styled-components';
-import { ChangeEvent, type FormEvent, useState } from 'react';
-import useUsersContext from '../../hooks/useUsersContext';
+
 import AddForm from '../../components/AddForm';
 import Modal from '../../components/UI/Modal';
-import { UserData, User } from '../../types/users';
-
-import Message from '../../components/Message';
+import { useUsersContext, useForm } from '../../hooks';
 
 const Container = styled.div`
   display: flex;
@@ -87,101 +84,41 @@ const ButtonGroup = styled.div`
 
 const UserName = styled.div``;
 
-const defaultFormData: UserData = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  password: '',
-};
-
 export default function AdminUsersPage() {
-  const [userAdded, setUserAdded] = useState<boolean>(false);
-  const [hasError, setHasError] = useState<boolean>(false);
-  const [formData, setFormData] = useState<UserData>(defaultFormData);
-  // const [sortOption, setSortOption] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const formOption = 'signup';
 
   const {
-    users,
-    addUser,
-    deleteUser,
-    updateUserSubmit,
-    isUpdating,
-    updatingUser,
-    setUpdatingUser,
-    setIsUpdating,
-  } = useUsersContext();
+    addHandler,
+    formData,
+    handleChange,
+    message,
+    isModalOpen,
+    setIsModalOpen,
+    showFormOption,
+  } = useForm(formOption);
 
-  function handleChange(
-    event: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) {
-    const { name, value } = event.target;
+  const { users, deleteUser } = useUsersContext();
 
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  }
+  // function updateUser(user: User) {
+  //   setIsUpdating(true);
+  //   setUpdatingUser(user);
 
-  function addHandler(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (
-      formData.firstName === '' ||
-      formData.lastName === '' ||
-      formData.email === '' ||
-      formData.password === ''
-    ) {
-      setHasError(true);
-      return false;
-    }
+  //   setFormData({
+  //     firstName: user.firstName,
+  //     lastName: user.lastName,
+  //     email: user.email,
+  //     password: user.password,
+  //   });
+  // }
 
-    if (isUpdating && updatingUser) {
-      updateUserSubmit({
-        ...updatingUser,
-        ...formData,
-      });
-
-      // Reset update mode
-      setIsUpdating(false);
-      setUpdatingUser(null);
-    } else {
-      addUser({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-      });
-    }
-
-    setFormData(defaultFormData);
-
-    setUserAdded(true);
-    setHasError(false);
-    setIsOpen(false);
-  }
-
-  function updateUser(user: User) {
-    setIsUpdating(true);
-    setUpdatingUser(user);
-
-    setFormData({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      password: user.password,
-    });
-  }
-
-  function ShowMessage() {
-    if (hasError) {
-      return <Message note="error">Error adding User</Message>;
-    } else if (userAdded) {
-      return <Message note="success">User has been added</Message>;
-    }
-    return;
-  }
+  // function ShowMessage() {
+  //   if (hasError) {
+  //     return <Message note="error">Error adding User</Message>;
+  //   } else if (userAdded) {
+  //     return <Message note="success">User has been added</Message>;
+  //   }
+  //   return;
+  // }
 
   return (
     <Container>
@@ -189,8 +126,10 @@ export default function AdminUsersPage() {
         <Header>
           <Title>Users</Title>
 
-          <ShowMessage />
-          <AddButton onClick={() => setIsOpen(true)}>Add User</AddButton>
+          {/* <ShowMessage /> */}
+          <AddButton onClick={() => showFormOption(formOption)}>
+            Add User
+          </AddButton>
         </Header>
         <List>
           {users.map((user, index) => (
@@ -199,7 +138,7 @@ export default function AdminUsersPage() {
                 {user.firstName} / {user.lastName} / {user.email}
               </UserName>
               <ButtonGroup>
-                <button onClick={() => updateUser(user)}>Update</button>
+                {/* <button onClick={() => updateUser(user)}>Update</button> */}
                 <button onClick={() => deleteUser(user._id)}>Delete</button>
               </ButtonGroup>
             </ListItem>
@@ -207,14 +146,15 @@ export default function AdminUsersPage() {
         </List>
       </Column>
 
-      <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
         <AddForm
-          formOption="signup"
+          formOption={formOption}
           addHandler={addHandler}
           formData={formData}
           handleChange={handleChange}
-          isUpdating={isUpdating}
-          setIsOpen={setIsOpen}
+          buttonCopy="Add User"
+          setIsOpen={setIsModalOpen}
+          message={message}
         />
       </Modal>
     </Container>

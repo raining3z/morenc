@@ -2,25 +2,46 @@
 
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 
+import { Project, ProjectData } from '../types/projects';
+import { School, SchoolData } from '../types/schools';
 import { UserCredentials, UserData, FormOption } from '../types/users';
-import useUsersContext from './useUsersContext';
-import useProjectsContext from './useProjectsContext';
-import useSchoolsContext from './useSchoolsContext';
-import { ProjectData } from '../types/projects';
-import { SchoolData } from '../types/schools';
+
+import {
+  useUsersContext,
+  useProjectsContext,
+  useSchoolsContext,
+} from './index';
 
 type DefaultFormData = UserData | ProjectData | SchoolData | UserCredentials;
 
 export default function useForm(option: FormOption) {
   const { addUser, loginUser } = useUsersContext();
-  const { addProject } = useProjectsContext();
-  const { addSchool } = useSchoolsContext();
+  const {
+    addProject,
+    isUpdating: projectIsUpdating,
+    setIsUpdating: projectSetIsUpdating,
+    setUpdatingProject,
+    updateProjectSubmit,
+    updatingProject,
+  } = useProjectsContext();
+  const {
+    addSchool,
+    isUpdating: schoolIsUpdating,
+    setIsUpdating: schoolSetIsUpdating,
+    setUpdatingSchool,
+    updateSchoolSubmit,
+    updatingSchool,
+  } = useSchoolsContext();
 
   let addOption: Function;
+  let setFormOptionData: Function;
+  let setUpdateOption: Function;
+  let updateSubmitOption: Function;
+  let updatingOption: Project | School | null;
+  let isUpdatingOption: boolean;
+  let setIsUpdatingOption: Function;
   // TODO: let defaultFormData: DefaultFormData doesn't work.  Why?
   let defaultFormData: DefaultFormData = {} as DefaultFormData;
-
-  console.log(option);
 
   switch (option) {
     case 'signup':
@@ -34,6 +55,11 @@ export default function useForm(option: FormOption) {
       break;
     case 'project':
       addOption = addProject;
+      setUpdateOption = setUpdatingProject;
+      updateSubmitOption = updateProjectSubmit;
+      updatingOption = updatingProject;
+      isUpdatingOption = projectIsUpdating;
+      setIsUpdatingOption = projectSetIsUpdating;
       defaultFormData = {
         name: '',
         description: '',
@@ -42,14 +68,32 @@ export default function useForm(option: FormOption) {
         endTime: '',
         schoolId: '',
       };
+      setFormOptionData = (project: Project) => ({
+        name: project.name,
+        description: project.description,
+        date: project.date,
+        startTime: project.startTime,
+        endTime: project.endTime,
+        schoolId: project.schoolId,
+      });
       break;
     case 'school':
       addOption = addSchool;
+      setUpdateOption = setUpdatingSchool;
+      updateSubmitOption = updateSchoolSubmit;
+      updatingOption = updatingSchool;
+      isUpdatingOption = schoolIsUpdating;
+      setIsUpdatingOption = schoolSetIsUpdating;
       defaultFormData = {
         name: '',
         address: '',
         county: '',
       };
+      setFormOptionData = (school: School) => ({
+        name: school.name,
+        address: school.address,
+        county: school.county,
+      });
       break;
     case 'login':
       addOption = loginUser;
@@ -64,8 +108,9 @@ export default function useForm(option: FormOption) {
 
   const [formData, setFormData] = useState<DefaultFormData>(defaultFormData);
   const [message, setMessage] = useState<string>('');
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [formOption, setFormOption] = useState<FormOption>(option);
+  const [optionId, setOptionId] = useState<string>('');
 
   function handleChange(
     event: ChangeEvent<
@@ -87,50 +132,69 @@ export default function useForm(option: FormOption) {
       (value) => value.trim() === ''
     );
 
-    console.log(formData);
-
     if (isFormInvalid) {
       setMessage('All fields are required.');
       return;
     }
 
-    // if (isUpdating && updatingProject) {
-    //   updateProjectSubmit({
-    //     ...updatingProject, // Keeps the existing ID and any other properties
-    //     ...formData, // Overwrites only the updated fields
-    //   });
+    if (isUpdatingOption && updatingOption) {
+      try {
+        const data = await updateSubmitOption({
+          ...updatingOption, // Keeps the existing ID and any other properties
+          ...formData, // Overwrites only the updated fields
+        });
 
-    //   // Reset update mode
-    //   setIsUpdating(false);
-    //   setUpdatingProject(null);
-    // } else {
-    try {
-      const data = await addOption(formData);
-
-      if (data) {
-        setMessage('');
-        setModalIsOpen(false);
+        if (data._id !== optionId) {
+          setMessage('');
+          setUpdateOption(null);
+        } else {
+          setMessage('');
+          setIsModalOpen(false);
+        }
+        setIsUpdatingOption(false);
         setFormData(defaultFormData);
+      } catch (error: any) {
+        console.error(error);
+        setMessage(error.message);
       }
-    } catch (error: any) {
-      console.error(error);
-      setMessage(error.message);
+    } else {
+      try {
+        const data = await addOption(formData);
+
+        if (data) {
+          setMessage('');
+          setIsModalOpen(false);
+          setFormData(defaultFormData);
+        }
+      } catch (error: any) {
+        console.error(error);
+        setMessage(error.message);
+      }
     }
-    // }
+  }
+
+  function updateFormFields(option: Project | School) {
+    setOptionId(option._id);
+    setUpdateOption(option);
+    setIsUpdatingOption(true);
+    setIsModalOpen(true);
+
+    setFormData(setFormOptionData(option));
   }
 
   function showFormOption(option: FormOption) {
-    setModalIsOpen(true);
+    setIsModalOpen(true);
     setFormOption(option);
   }
 
   return {
-    message,
-    handleChange,
     addHandler,
     formData,
-    setModalIsOpen,
-    modalIsOpen,
+    handleChange,
+    isModalOpen,
+    message,
+    setIsModalOpen,
     showFormOption,
+    updateFormFields,
   };
 }

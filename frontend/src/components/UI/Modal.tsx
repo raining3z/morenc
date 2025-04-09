@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import styled from 'styled-components';
 import { FaTimes } from 'react-icons/fa';
+import styled from 'styled-components';
 
 const Backdrop = styled.div`
   position: fixed;
